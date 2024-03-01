@@ -94,6 +94,14 @@ namespace Coffee.DATA
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_Product_Category");
             });
+            modelBuilder.Entity<ProductImage>(entity =>
+            {
+                entity.ToTable("ProductImage");
+
+                entity.HasOne(d => d.Product).WithMany(p => p.ProductImages)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_ProductImage_Product");
+            });
         }
     }
 }

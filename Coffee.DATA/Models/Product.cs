@@ -16,6 +16,7 @@ namespace Coffee.DATA.Models
         public string? Image { get; set; }
         public int? CategoryId { get; set; }
         public Category Category { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        public ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }
 }

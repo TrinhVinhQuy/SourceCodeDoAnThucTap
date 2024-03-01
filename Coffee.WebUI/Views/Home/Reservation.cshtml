@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewData["Title"] = "Đặt Bàn";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main>
+    <!-- breadcrumb area start -->
+    <section class="breadcrumb-area pt-140 pb-140 bg_img" data-overlay="dark" data-opacity="5" data-background="../assets/images/bg/testimonial-bg-2.jpg">
+        <div class="shape shape__1"><img src="~/assets/images/shape/breadcrumb-shape-1.png" alt=""></div>
+        <div class="shape shape__2"><img src="~/assets/images/shape/breadcrumb-shape-2.png" alt=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 text-center">
+                    <h2 class="page-title">Đặt bàn tại Cafena</h2>
+                    <div class="cafena-breadcrumb breadcrumbs">
+                        <ul class="list-unstyled d-flex align-items-center justify-content-center">
+                            <li class="cafenabcrumb-item duxinbcrumb-begin">
+                                <a asp-controller="Home" asp-action="Index"><span>Trang chủ</span></a>
+                            </li>
+                            <li class="cafenabcrumb-item duxinbcrumb-end">
+                                <span>Đặt bàn</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- breadcrumb area end -->
+    <!-- reservation area start -->
+    <section class="reservation__area reservation__area--2 position-relative pt-120 pb-120">
+        <span class="shape shape__1 position-absolute"><img src="~/assets/images/shape/hero-shape-2-1.png" alt=""></span>
+        <span class="shape shape__2 position-absolute"><img src="~/assets/images/shape/hero-shape-2-2.png" alt=""></span>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="reservation__wrapper reservation__wrapper--2">
+                        <div class="section-heading section-heading__black text-center mb-35">
+                            <h2 class="title">Đặt bàn</h2>
+                        </div>
+                        <div class="reservation__form reservation__form--2 mt-none-30 text-center">
+                            <form action="https://xpressrow.com/html/cafena/cafena/index.html">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="from-group mt-30">
+                                            <input type="text" name="name" placeholder="Tên">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="from-group mt-30">
+                                            <input type="tel" name="tel" id="tel" placeholder="Điện thoại">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="from-group mt-30">
+                                            <select name="subject" id="subject">
+                                                <option data-display="Service Category">Chỗ ngồi *</option>
+                                                <option value="1">Cho 1 người</option>
+                                                <option value="2">Cho 2 người</option>
+                                                <option value="3">Cho 3 người</option>
+                                                <option value="4">Cho 4 người</option>
+                                                <option value="5">Cho 5 người</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="from-group mt-30">
+                                            <input type="date" id="date" name="Ngày">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="from-group mt-30">
+                                            <input type="time" id="time" name="Giờ">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="from-group mt-30">
+                                            <input type="email" id="2email" name="2email" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 text-center">
+                                        <button type="submit" class="site-btn mt-30">Gửi yêu cầu của bạn</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- reservation area end -->
+
+</main>
+

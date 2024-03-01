@@ -1,0 +1,43 @@
+﻿@model LoginModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@* Add file css *@
+@section Styles {
+    <link rel="stylesheet" href="~/assets/css/css_Login.css" />
+}
+<form asp-controller="Login" asp-action="LoginSave" method="post">
+    <div class="m-auto">
+        <div class="login-form">
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+            }
+            <h2 class="text-center mb-4">Đăng nhập</h2>
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label"></label>
+                <input asp-for="UserName" class="form-control"/>
+                @* <span asp-validation-for="UserName" class="text-danger"></span> *@
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                @* <span asp-validation-for="Password" class="text-danger"></span> *@
+            </div>
+            <center>
+                <button type="submit" class="site-btn">Đăng nhập</button>
+                <br />
+                <span>Hoặc</span>
+            </center>
+            <div class="d-flex justify-content-between">
+                <a asp-controller="Login" asp-action="GoogleLogin" class="google-btn" style="width: 125px"><i class="fab fa-google"></i> Google</a>
+                <button type="button" class="facebook-btn"><i class="fab fa-facebook-f"></i> Facebook</button>
+            </div>
+        </div>
+    </div>
+    <br />
+</form>
+
+
+

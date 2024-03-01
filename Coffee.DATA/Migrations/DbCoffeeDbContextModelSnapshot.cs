@@ -200,6 +200,34 @@ namespace Coffee.DATA.Migrations
                     b.ToTable("Product", (string)null);
                 });
 
+            modelBuilder.Entity("Coffee.DATA.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UrlImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImage", (string)null);
+                });
+
             modelBuilder.Entity("Coffee.DATA.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -323,6 +351,18 @@ namespace Coffee.DATA.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Coffee.DATA.Models.ProductImage", b =>
+                {
+                    b.HasOne("Coffee.DATA.Models.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_ProductImage_Product");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Coffee.DATA.Models.User", b =>
                 {
                     b.HasOne("Coffee.DATA.Models.Role", "Role")
@@ -348,6 +388,8 @@ namespace Coffee.DATA.Migrations
             modelBuilder.Entity("Coffee.DATA.Models.Product", b =>
                 {
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("ProductImages");
                 });
 
             modelBuilder.Entity("Coffee.DATA.Models.Role", b =>

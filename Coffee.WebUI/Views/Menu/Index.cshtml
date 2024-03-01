@@ -1,0 +1,198 @@
+﻿@using Coffee.DATA.Models;
+@model IEnumerable<ProductModel>;
+@{
+    ViewData["Title"] = "Thực đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="breadcrumb-area pt-140 pb-140 bg_img" data-overlay="dark" data-opacity="5" data-background="../assets/images/bg/testimonial-bg-2.jpg">
+    <div class="shape shape__1"><img src="~/assets/images/shape/breadcrumb-shape-1.png" alt=""></div>
+    <div class="shape shape__2"><img src="~/assets/images/shape/breadcrumb-shape-2.png" alt=""></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 text-center">
+                <h2 class="page-title">Thực đơn tại Cafena</h2>
+                <div class="cafena-breadcrumb breadcrumbs">
+                    <ul class="list-unstyled d-flex align-items-center justify-content-center">
+                        <li class="cafenabcrumb-item duxinbcrumb-begin">
+                            <a asp-controller="Home" asp-action="Index"><span>Trang chủ</span></a>
+                        </li>
+                        <li class="cafenabcrumb-item duxinbcrumb-end">
+                            <span>Thực đơn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="popular-menu__area grey-bg position-relative pb-120 pt-20">
+
+    <span class="shape shape__1 position-absolute"><img src="~/assets/images/shape/menu-shape-1.png" alt=""></span>
+    <span class="shape shape__2 position-absolute"><img src="~/assets/images/shape/menu-shape-2.png" alt=""></span>
+    <span class="shape shape__3 position-absolute"><img src="~/assets/images/shape/menu-shape-3.png" alt=""></span>
+    <span class="shape shape__4 position-absolute"><img src="~/assets/images/shape/menu-shape-4.png" alt=""></span>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 text-center">
+                <div class="section-heading section-heading__black mb-40">
+                    <span class="sub-title">Thực đơn</span>
+                    <h2 class="title">Thực đơn phổ biến</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12 text-center">
+                <div class="popular-menu__wrapper m-auto d-inline-block">
+                    <div class="popular-menu__filter d-flex justify-content-center align-items-center mb-55">
+                        @{
+                            var i = 1;
+                            var listCategory = ViewBag.ListCategory as IEnumerable<Category>;
+                            foreach (var item in listCategory)
+                            {
+                                var datafilter = ".cat" + item.Id;
+                                if (i == 1)
+                                {
+                                            <button class="active" data-filter="@datafilter">@item.Name</button>
+                                }
+                                else
+                                {
+                                            <button data-filter="@datafilter">@item.Name</button>
+                                }
+                                i++;
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="popular-menu-grid" class="row popular-menu__grid mt-none-30">
+            <div class="col-xl-4 col-lg-6 col-md-6 grid-sizer"></div>
+            @{
+                foreach (var item in Model)
+                {
+                    var cat = "cat" + item.categoryId;
+                            <div class="col-xl-4 col-lg-6 col-md-6 grid-item @cat mt-30">
+                                <div class="popular-menu__item">
+                                    <a asp-controller="Product" asp-action="ProductDetails" asp-route-url="@item.Url" class="popular-menu__thumb">
+                                        <img src="@item.ProductImages.First().ImageUrl" alt="">
+                                    </a>
+                                    <div class="popular-menu__content text-center">
+                                        <h2 class="title">
+                                            <a href="product-details.html">@item.Name</a>
+                                        </h2>
+                                        <div class="pp__price d-flex align-items-center justify-content-center">
+                                            <h6 class="label">Giá - </h6>
+                                            <span class="price"> @item.Price đ/ <span class="regular"><del>$348</del></span></span>
+                                        </div>
+                                        <div class="pp__action pp__action--2 mt-15 d-flex align-items-center justify-content-center">
+                                            <div class="cart d-flex align-items-center justify-content-center">
+                                                <a href="#0" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
+                                            </div>
+                                            <div class="wishlist d-flex align-items-center justify-content-center">
+                                                <a href="#0"><i class="fal fa-heart"></i></a>
+                                            </div>
+                                            <div class="view d-flex align-items-center justify-content-center">
+                                                <a href="#0" onclick="show(@item.ProductId)"><i class="fal fa-eye"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+<!-- product popup start -->
+@{
+    foreach(var item in Model)
+    {
+        var productPopup = "product-popup-"+item.ProductId;
+                <div class="product-popup @productPopup">
+                    <div class="view-background">
+                        <div class="row">
+                            <div class="col-md-4 align-self-center">
+                                <div class="quickview d-flex align-items-center justify-content-center">
+                                    <div class="quickview__thumb">
+                                        <img src="assets/images/products/pp-1.png" alt="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="viewcontent">
+                                    <div class="viewcontent__header">
+                                        <h2>@item.Name</h2>
+                                        <a class="view_close product-p-close" href="javascript:void(0)"><i class="fal fa-times"></i></a>
+                                    </div>
+                                    <div class="viewcontent__rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fal fa-star"></i>
+                                    </div>
+                                    <div class="viewcontent__price">
+                                        <h4>@item.Price <span>đ</span></h4>
+                                    </div>
+                                    <div class="viewcontent__stock">
+                                        <h4>Hiên trạng :<span> Còn hàng</span></h4>
+                                    </div>
+                                    <div class="viewcontent__details">
+                                        <p>@item.Description</p>
+                                    </div>
+                                    <div class="viewcontent__action">
+                                        <span>Số lượng</span>
+                                        <input type="number" id="txtNumber" placeholder="1">
+                                        <a class="site-btn" href="#" onclick="addCart('@item.ProductId','0')"><i class="fal fa-shopping-basket"></i></a>
+                                    </div>
+                                    <div class="viewcontent__footer">
+                                        <ul class="list-unstyled">
+                                            <li>Category:</li>
+                                            <li>SKU:</li>
+                                            <li>Brand:</li>
+                                        </ul>
+                                        <ul class="list-unstyled">
+                                            <li>Watches</li>
+                                            <li>2584-MK63</li>
+                                            <li>Brenda</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    }
+}
+<!-- product popup end -->
+@section Scripts {
+    <script>
+        function show(id) {
+            $('.overlay').addClass('show-popup'); // Thêm lớp 'show-popup' cho phần tử có lớp 'overlay'
+            $('.product-popup-' + id).addClass('show-popup'); // Thêm lớp 'show-popup' cho phần tử có lớp 'product-popup-{id}'
+        }
+    </script>
+    <script>
+        function addCart(productId, quantity) {
+            let count = 1;
+            if (quantity == 0) {
+                count = document.getElementById("txtNumber").value;
+            }
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    product: { Id: productId },
+                    quantity: count
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('Thêm vào giỏ hàng thành công!');
+                    } else {
+                        alert('Thêm vào giỏ hàng không thành công!');
+                    }
+                }
+            });
+        }
+    </script>
+}

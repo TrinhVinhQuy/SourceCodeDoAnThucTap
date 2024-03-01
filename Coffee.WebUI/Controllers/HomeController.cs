@@ -1,6 +1,11 @@
 ﻿using Coffee.WebUI.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using Coffee.DATA;
 
 namespace Coffee.WebUI.Controllers
 {
@@ -12,21 +17,25 @@ namespace Coffee.WebUI.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index()
         {
             return View();
         }
-
-        public IActionResult Privacy()
+        public IActionResult Introduce()
         {
             return View();
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Contact()
+        {
+            return View();
+        }
+        public IActionResult Reservation()
+        {
+            return View();
+        }
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
     }
 }
