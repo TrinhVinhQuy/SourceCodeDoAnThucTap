@@ -1,7 +1,10 @@
 ﻿using Coffee.DATA;
 using Coffee.WebUI;
+using Coffee.WebUI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using NuGet.Protocol.Plugins;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
+
 
 namespace Coffee.WebUI
 {
@@ -40,12 +43,21 @@ namespace Coffee.WebUI
                     googleOptions.ClientSecret = "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";
                 });
             builder.Services.AddHttpContextAccessor();
+            //builder.Services.AddSession(options =>
+            //{
+            //    options.IdleTimeout = TimeSpan.FromMinutes(20); // Thời gian chờ không hoạt động là 20 phút
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.IsEssential = true; // Đảm bảo rằng cookie của session là cần thiết cho ứng dụng
+            //});
+            builder.Services.AddDistributedMemoryCache();
+
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(20); // Thời gian chờ không hoạt động là 20 phút
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true; // Đảm bảo rằng cookie của session là cần thiết cho ứng dụng
+                options.Cookie.Name = ".AdventureWorks.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.IsEssential = true;
             });
+            //builder.Services.Configure<TwilioOptions>(configuration.GetSection("Twilio"));
 
             var app = builder.Build();
 
@@ -77,20 +89,22 @@ namespace Coffee.WebUI
             //});
             app.UseAuthorization();
             ConfigureEndpoints(app);
-            //app.MapControllerRoute(
-            //    name: "default",
-            //    pattern: "{controller=Home}/{action=Index}/{id?}");
+            
             app.Run();
         }
         private static void ConfigureEndpoints(IApplicationBuilder app)
         {
             app.UseEndpoints(endpoints =>
             {
-                
+
                 endpoints.MapControllerRoute(
                     name: "login",
                     pattern: "login",
                     defaults: new { controller = "Login", action = "Index" });
+                endpoints.MapControllerRoute(
+                    name: "login",
+                    pattern: "register",
+                    defaults: new { controller = "Login", action = "Register" });
                 endpoints.MapControllerRoute(
                     name: "shop",
                     pattern: "cua-hang",
@@ -115,7 +129,7 @@ namespace Coffee.WebUI
                     name: "menu",
                     pattern: "thuc-don",
                     defaults: new { controller = "Menu", action = "Index" });
-                
+
                 endpoints.MapControllerRoute(
                     name: "productdetails",
                     pattern: "san-pham-{url}",

@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Đăng kí";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/css/css_Login.css" />
+}
+<form asp-controller="Login" asp-action="Register" method="post">
+    <div class="m-auto">
+        <div class="login-form">
+            <h2 class="text-center mb-4">Đăng kí</h2>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control" name="email" />
+                @if (ViewBag.Email != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Email</div>
+                }
+            </div>
+            <center id="next">
+                <a href="javascript:void(0)" class="site-btn">Tiếp tục</a>
+            </center>
+            <div id="pass">
+                <div class="mb-3">
+                    <label class="form-label">Mã otp</label>
+                    <input class="form-control" name="otp"/>
+                    @if (ViewBag.Otp != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Otp</div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" name="pass" ty class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nhập lại mật khẩu</label>
+                    <input type="password" name="cfpass" class="form-control" />
+                </div>
+                <center>
+                    <a href="javascript:void(0)" id="btnCreate" class="site-btn">Đăng ký</a>
+                </center>
+            </div>
+        </div>
+    </div>
+    <br />
+</form>
+@section Scripts {
+    <script src="~/assets/js/js_login.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#pass").hide();
+            $("#next").click(function () {
+                var email = $("input[name='email']").val();
+
+                if (isValidEmail(email)) {
+                    $("#pass").show();
+                    $("#next").hide();
+                    $.ajax({
+                        type: "POST",
+                        url: "/send-otp",
+                        data: { email: email },
+                        success: function (response) {
+                            // Xử lý phản hồi từ máy chủ (nếu cần)
+                            console.log("Email sent successfully!");
+                        },
+                        error: function (xhr, status, error) {
+                            // Xử lý lỗi (nếu có)
+                            console.error("Error:", error);
+                        }
+                    });
+                }
+                else {
+                    alert("Vui lòng nhập email!");
+                }
+            });
+        });
+        $("#btnCreate").click(function () {
+            var email = $("input[name='email']").val();
+            var pass = $("input[name='pass']").val();
+            var cfpass = $("input[name='cfpass']").val();
+            var otp = $("input[name='otp']").val();
+            if (pass === cfpass) {
+                $.ajax({
+                    url: "/Login/RegisterCreate",
+                    method: "POST",
+                    data: { email: email, password: pass, otp: otp },
+                    success: function () {
+                        // Xử lý khi đăng ký thành công
+                        alert("Đăng ký thành công!");
+                        
+                    },
+                    error: function (xhr, status, error) {
+                        // Xử lý khi đăng ký không thành công
+                        alert("Đăng ký thất bại:");
+                        // Hiển thị thông báo lỗi hoặc thực hiện xử lý khác
+                    }
+                });
+            } else {
+                alert("Mật khẩu không khớp!");
+            }
+
+        });
+    </script>
+}

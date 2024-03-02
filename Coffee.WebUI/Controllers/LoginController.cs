@@ -7,6 +7,11 @@ using Coffee.WebUI.Models;
 using Coffee.DATA.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Google;
+using System.Net.Mail;
+using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Http;
+using Coffee.DATA.Models;
+using System.Net.Http;
 
 namespace Coffee.WebUI.Controllers
 {
@@ -27,15 +32,14 @@ namespace Coffee.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 var hashedPassword = md5.ComputeMD5Hash(model.Password);
-                var user = await _dbCoffeeDbContext.Users.FirstOrDefaultAsync(x => x.UserName.Contains(model.UserName) && x.Password.Contains(hashedPassword) && x.Status == true);
+                var user = await _dbCoffeeDbContext.Users.FirstOrDefaultAsync(x => x.Email.Contains(model.Email) && x.Password.Contains(hashedPassword) && x.Status == true);
                 if (user != null)
                 {
                     var role = await _dbCoffeeDbContext.Roles.FirstOrDefaultAsync(x => x.Id == user.RoleId);
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, model.UserName),
-                        new Claim(ClaimTypes.NameIdentifier, user.Name),
-                        new Claim(ClaimTypes.Role, role.Name)
+                        new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.Role, "User")
                     };
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -64,15 +68,74 @@ namespace Coffee.WebUI.Controllers
         }
         public IActionResult GoogleLogin()
         {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
-
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleResponse", "Login")
+            };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
         public async Task<IActionResult> GoogleResponse()
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (result.Succeeded)
+            {
+                var user = result.Principal;
+                var emailClaim = user.FindFirst(ClaimTypes.Email).Value;
+                var checkEmail = _dbCoffeeDbContext.Users.Where(x => x.Email == emailClaim);
+                if (checkEmail.Count() < 1)
+                {
+                    var newUser = new User { Email = emailClaim, RoleId = 2 };
+                    _dbCoffeeDbContext.Users.Add(newUser);
+                    _dbCoffeeDbContext.SaveChanges();
+                }
+            }
             return RedirectToAction("Index", "Home");
+        }
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("/send-otp")]
+        public IActionResult SendOTPEmail(string email)
+        {
+            // Mật khẩu ứng dụng OtpEmail : kemz hkfu jode ctfp
+            Random random = new Random();
+            var randomNumber = random.Next(100000, 1000000);
+            MailMessage message = new MailMessage("txvq0101@gmail.com", email, "Otp", Convert.ToString(randomNumber));
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+            client.EnableSsl = true;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new System.Net.NetworkCredential("txvq0101@gmail.com", "kemz hkfu jode ctfp");
+            client.Send(message);
+            HttpContext.Session.SetString("OTP", Convert.ToString(randomNumber));
+            //HttpContext.Session.SetString("OTP", "1");
+            return Ok();
+        }
+        [HttpPost]
+        public IActionResult RegisterCreate(string email, string password, string otp)
+        {
+            var otpss = HttpContext.Session.GetString("OTP");
+            var checkEmail = _dbCoffeeDbContext.Users.Where(x => x.Email == email);
+            if (checkEmail.Count() > 0)
+            {
+                return BadRequest();
+            }
+            if (otpss == otp && checkEmail.Count() < 1)
+            {
+                var newUser = new User { Email = email, Password = md5.ComputeMD5Hash(password), RoleId = 2 };
+
+                _dbCoffeeDbContext.Users.Add(newUser);
+                _dbCoffeeDbContext.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }
