@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
-using Twilio.Types;
+//using Twilio;
+//using Twilio.Rest.Api.V2010.Account;
+//using Twilio.Types;
 
 namespace Coffee.WebUI.Controllers
 {
@@ -24,17 +24,17 @@ namespace Coffee.WebUI.Controllers
             }
             return View();
         }
-        public Task SendOTP()
-        {
-            var accountSid = "AC6fd617572dc4c4f1731102da9aa95a11";
-            var authToken = "6e898044665551af057f99f90384c102";
-            TwilioClient.Init(accountSid, authToken);
+        //public Task SendOTP()
+        //{
+        //    var accountSid = "AC6fd617572dc4c4f1731102da9aa95a11";
+        //    var authToken = "6e898044665551af057f99f90384c102";
+        //    TwilioClient.Init(accountSid, authToken);
 
-            return MessageResource.CreateAsync(
-              to: new PhoneNumber("+84946453657"),
-              from: new PhoneNumber("12202723681"),
-              body: "180729");
-        }
+        //    return MessageResource.CreateAsync(
+        //      to: new PhoneNumber("+84946453657"),
+        //      from: new PhoneNumber("12202723681"),
+        //      body: "180729");
+        //}
 
     }
 }

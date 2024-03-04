@@ -1,6 +1,7 @@
-﻿
+﻿@using Coffee.DATA.Models
+@model IEnumerable<ProductModel>;
 @{
-    ViewData["Title"] = @ViewBag.Name;
+    ViewData["Title"] = "Cửa hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -25,64 +26,125 @@
                     </div>
                 </div>
             </div>
+            <div id="shop"></div>
         </div>
     </section>
     <!-- breadcrumb area end -->
     <!-- product popup start -->
-    <div class="product-popup product-popup-1">
-        <div class="view-background">
-            <div class="row">
-                <div class="col-md-4 align-self-center">
-                    <div class="quickview d-flex align-items-center justify-content-center">
-                        <div class="quickview__thumb">
-                            <img src="~/assets/images/products/pp-1.png" alt="">
+    @{
+        foreach (var item in Model)
+        {
+            var productPopup = "product-popup-" + item.ProductId;
+            <div class="product-popup @productPopup">
+                <div class="view-background">
+                    <div class="row">
+                        <div class="col-md-4 align-self-center">
+                            <div class="quickview d-flex align-items-center justify-content-center">
+                                <div class="quickview__thumb">
+                                    <img src="assets/images/products/pp-1.png" alt="" />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="viewcontent">
-                        <div class="viewcontent__header">
-                            <h2>VICARAGUA COFFEE BEANS</h2>
-                            <a class="view_close product-p-close" href="javascript:void(0)"><i class="fal fa-times"></i></a>
-                        </div>
-                        <div class="viewcontent__rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fal fa-star"></i>
-                        </div>
-                        <div class="viewcontent__price">
-                            <h4><span>$</span>99.00</h4>
-                        </div>
-                        <div class="viewcontent__stock">
-                            <h4>Available :<span> In stock</span></h4>
-                        </div>
-                        <div class="viewcontent__details">
-                            <p>Anlor sit amet, consectetur adipiscing elit. Fusce condimentum est lacus, non pretium risus lacinia vel. Fusce eget turpis orci.</p>
-                        </div>
-                        <div class="viewcontent__action">
-                            <span>Qty</span>
-                            <input type="number" placeholder="1">
-                            <a class="site-btn" href="#">add to cart</a>
-                        </div>
-                        <div class="viewcontent__footer">
-                            <ul class="list-unstyled">
-                                <li>Category:</li>
-                                <li>SKU:</li>
-                                <li>Brand:</li>
-                            </ul>
-                            <ul class="list-unstyled">
-                                <li>Watches</li>
-                                <li>2584-MK63</li>
-                                <li>Brenda</li>
-                            </ul>
+                        <div class="col-md-8">
+                            <div class="viewcontent">
+                                <div class="viewcontent__header">
+                                    <h2>@item.Name</h2>
+                                    <a class="view_close product-p-close" href="javascript:void(0)"><i class="fal fa-times"></i></a>
+                                </div>
+                                <div class="viewcontent__rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fal fa-star"></i>
+                                </div>
+                                <div class="viewcontent__price">
+                                    <h4>@item.Price <span>đ</span></h4>
+                                </div>
+                                <div class="viewcontent__stock">
+                                    <h4>Hiên trạng :<span> Còn hàng</span></h4>
+                                </div>
+                                <div class="viewcontent__details">
+                                    <p>@item.Description</p>
+                                </div>
+                                <div class="viewcontent__action">
+                                    <span>Số lượng</span>
+                                    <input type="number" id="txtNumber" placeholder="1">
+                                    <a class="site-btn" href="#" onclick="addCart('@item.ProductId','0')"><i class="fal fa-shopping-basket"></i></a>
+                                </div>
+                                <div class="viewcontent__footer">
+                                    <ul class="list-unstyled">
+                                        <li>Category:</li>
+                                        <li>SKU:</li>
+                                        <li>Brand:</li>
+                                    </ul>
+                                    <ul class="list-unstyled">
+                                        <li>Watches</li>
+                                        <li>2584-MK63</li>
+                                        <li>Brenda</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
+    }
+    @* <div class="product-popup product-popup-1">
+    <div class="view-background">
+    <div class="row">
+    <div class="col-md-4 align-self-center">
+    <div class="quickview d-flex align-items-center justify-content-center">
+    <div class="quickview__thumb">
+    <img src="~/assets/images/products/pp-1.png" alt="">
     </div>
+    </div>
+    </div>
+    <div class="col-md-8">
+    <div class="viewcontent">
+    <div class="viewcontent__header">
+    <h2>VICARAGUA COFFEE BEANS</h2>
+    <a class="view_close product-p-close" href="javascript:void(0)"><i class="fal fa-times"></i></a>
+    </div>
+    <div class="viewcontent__rating">
+    <i class="fas fa-star"></i>
+    <i class="fas fa-star"></i>
+    <i class="fas fa-star"></i>
+    <i class="fas fa-star"></i>
+    <i class="fal fa-star"></i>
+    </div>
+    <div class="viewcontent__price">
+    <h4><span>$</span>99.00</h4>
+    </div>
+    <div class="viewcontent__stock">
+    <h4>Available :<span> In stock</span></h4>
+    </div>
+    <div class="viewcontent__details">
+    <p>Anlor sit amet, consectetur adipiscing elit. Fusce condimentum est lacus, non pretium risus lacinia vel. Fusce eget turpis orci.</p>
+    </div>
+    <div class="viewcontent__action">
+    <span>Qty</span>
+    <input type="number" placeholder="1">
+    <a class="site-btn" href="#">add to cart</a>
+    </div>
+    <div class="viewcontent__footer">
+    <ul class="list-unstyled">
+    <li>Category:</li>
+    <li>SKU:</li>
+    <li>Brand:</li>
+    </ul>
+    <ul class="list-unstyled">
+    <li>Watches</li>
+    <li>2584-MK63</li>
+    <li>Brenda</li>
+    </ul>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> *@
     <!-- product popup end -->
     <!-- blog area start -->
     <div class="blog-area pt-120 pb-105">
@@ -92,7 +154,7 @@
                     <div class="shop-filter-wrapper d-flex justify-content-between align-items-center mb-30">
                         <div class="sf-left">
                             <div class="show-text">
-                                <span>Showing 1–12 of 54 results</span>
+                                <span>Có @Model.Count() sản phẩm</span>
                             </div>
                         </div>
                         <div class="sf-right d-flex justify-content-end align-items-center">
@@ -106,12 +168,11 @@
                                 </div>
                             </nav>
                             <div class="sort-wrapper ml-45">
-                                <select name="select" id="select">
-                                    <option value="1">Short By New</option>
-                                    <option value="2">Short By New</option>
-                                    <option value="3">Short By New</option>
-                                    <option value="4">Short By New</option>
-                                    <option value="5">Short By New</option>
+                                <select name="select" id="select" onchange="redirect()">
+                                    <option value="sort">Sắp xếp</option>
+                                    <option value="asc">Tăng dần</option>
+                                    <option value="desc">Giảm dần</option>
+                                    <option value="name">Theo tên</option>
                                 </select>
                             </div>
                         </div>
@@ -123,760 +184,136 @@
                     <div class="tab-content" id="shop-tabContent">
                         <div class="tab-pane fade show mt-none-30 active" id="shop-tab-1" role="tabpanel" aria-labelledby="shop-tab-1-tab">
                             <div class="row">
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 active text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-1.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-2.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
+                                @{
+                                    if (Model.Count() > 0)
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
+                                                <div class="pp__item pp__item--2 active text-center pt-20 pb-20">
+                                                    <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
+                                                        <div class="cart d-flex align-items-center justify-content-center">
+                                                            <a href="#0" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
+                                                        </div>
+                                                        <div class="wishlist d-flex align-items-center justify-content-center">
+                                                            <a href="#0"><i class="fal fa-heart"></i></a>
+                                                        </div>
+                                                        <div class="view d-flex align-items-center justify-content-center">
+                                                            <a href="#0" onclick="show(@item.ProductId)">
+                                                                <i class="fal fa-eye"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pp__thumb pp__thumb--2 mt-35">
+                                                        <img class="default" src="@item.Image" alt="">
+                                                        <img class="on-hover" src="@item.ProductImages.First().ImageUrl" alt="">
+                                                    </div>
+                                                    <div class="pp__content pp__content--2 mt-25">
+                                                        <div class="pp__c-top d-flex align-items-center justify-content-center">
+                                                            <div class="pp__cat pp__cat--2">
+                                                                <a href="#0">
+                                                                    @item.categoryName
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <h4 class="pp__title pp__title--2">
+                                                            <a href="product-details.html">@item.Name</a>
+                                                        </h4>
+                                                        <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
+                                                            <h6 class="label">Giá - </h6>
+                                                            <span class="price"> @item.Price đ/ <span class="regular"><del>$348</del></span></span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">vicaragua Coffee Beans</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-2.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-3.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">americano Coffee</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-3.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-4.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">Virgin Coffee Gred</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-4.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-5.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">CREUSET Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">Brazil Coffee Gred</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-5.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-6.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Creuset Cocotte</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">Japanis Coffee Gred</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-7.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-8.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">CAFFÈ LATTE</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-8.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-9.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">CAPPUCCINO</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">CAFÈ AU LAIT</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-9.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-10.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">ESPRESSO MACCHIATO</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-10.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-11.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">IRISH COFFEE</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-11.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-12.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">LATTE MACCHIATO</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-11.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-12.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">ESPRESSO RISTRETTO</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6 col-md-6 mt-30">
-                                    <div class="pp__item pp__item--2 text-center pt-20 pb-20">
-                                        <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
-                                            <div class="cart d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                            </div>
-                                            <div class="wishlist d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-heart"></i></a>
-                                            </div>
-                                            <div class="view d-flex align-items-center justify-content-center">
-                                                <a href="#0"><i class="fal fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="pp__thumb pp__thumb--2 mt-35">
-                                            <img class="default" src="~/assets/images/products/shop/s-p-12.png" alt="">
-                                            <img class="on-hover" src="~/assets/images/products/shop/s-p-1.png" alt="">
-                                        </div>
-                                        <div class="pp__content pp__content--2 mt-25">
-                                            <div class="pp__c-top d-flex align-items-center justify-content-center">
-                                                <div class="pp__cat pp__cat--2">
-                                                    <a href="#0">Rosted Coffee</a>
-                                                </div>
-                                            </div>
-                                            <h4 class="pp__title pp__title--2">
-                                                <a href="product-details.html">ESPRESSO LUNGO</a>
-                                            </h4>
-                                            <div class="pp__price pp__price--2 d-flex align-items-center justify-content-center">
-                                                <h6 class="label">Price - </h6>
-                                                <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="ml-10 mt-10">Không tìm thấy sản phẩm!</span>
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="tab-pane fade mt-none-30" id="shop-tab-2" role="tabpanel" aria-labelledby="shop-tab-2-tab">
                             <div class="row">
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list active text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-1.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-2.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
+                                @{
+                                    foreach (var item in Model)
+                                    {
+                                        <div class="col-xl-12 mt-30">
+                                            <div class="pp__item pp__item--2 pp__item--list active text-center pt-30 pb-25">
+                                                <div class="row">
+                                                    <div class="col-lg-4 col-md-4">
+                                                        <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
+                                                            <img class="default" src="@item.Image" alt="">
+                                                            <img class="on-hover" src="@item.ProductImages.First().ImageUrl" alt="">
                                                         </div>
                                                     </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">vicaragua Coffee Beans</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-2.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-3.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">AMERICANO COFFEE</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
+                                                    <div class="col-lg-8 col-md-8">
+                                                        <div class="pp__content pp__content--2 pp__content--list m-0">
+                                                            <div class="pp__c-top d-flex align-items-center">
+                                                                <div class="pp__cat pp__cat--2">
+                                                                    <a href="#0">@item.categoryName</a>
+                                                                </div>
+                                                            </div>
+                                                            <h4 class="pp__title pp__title--2 pp__title--list">
+                                                                <a href="product-details.html">@item.Name</a>
+                                                            </h4>
+                                                            <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
+                                                                <h6 class="label">Giá - </h6>
+                                                                <span class="price"> @item.Price đ / <span class="regular"><del>$348</del></span></span>
+                                                            </div>
+                                                            <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
+                                                                <div class="cart d-flex align-items-center justify-content-center">
+                                                                    <a href="#0" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
+                                                                </div>
+                                                                <div class="wishlist d-flex align-items-center justify-content-center">
+                                                                    <a href="#0"><i class="fal fa-heart"></i></a>
+                                                                </div>
+                                                                <div class=" d-flex align-items-center justify-content-center">
+                                                                    <a href="#0" onclick="show(@item.ProductId)"><i class="fal fa-eye"></i></a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-3.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-4.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">JAPANIS COFFEE GRED</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-4.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-5.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">ESPRESSO MACCHIATO</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-5.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-6.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">ESPRESSO RISTRETTO Beans</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-6.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-7.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">ESPRESSO LUNGO</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-7.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-8.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">CAFÈ AU LAIT</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-12 mt-30">
-                                    <div class="pp__item pp__item--2 pp__item--list text-center pt-30 pb-25">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-4">
-                                                <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                    <img class="default" src="~/assets/images/products/shop/s-p-8.png" alt="">
-                                                    <img class="on-hover" src="~/assets/images/products/shop/s-p-9.png" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8">
-                                                <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                    <div class="pp__c-top d-flex align-items-center">
-                                                        <div class="pp__cat pp__cat--2">
-                                                            <a href="#0">Coffee</a>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="pp__title pp__title--2 pp__title--list">
-                                                        <a href="product-details.html">CAFFÈ LATTE Beans</a>
-                                                    </h4>
-                                                    <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                        <h6 class="label">Price - </h6>
-                                                        <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                                    </div>
-                                                    <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                        <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-shopping-basket"></i></a>
-                                                        </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
-                                                        </div>
-                                                        <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-eye"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    }
+                                }
                             </div>
                         </div>
-                    </div>
-                    <div class="cafena-pagination mt-60">
-                        <ul>
-                            <li><a href="#"><span><i class="far fa-angle-double-left"></i></span></a></li>
-                            <li><a href="#"><span>01</span></a></li>
-                            <li><a href="#"><span class="current">02</span></a></li>
-                            <li><a href="#"><span>03</span></a></li>
-                            <li><a href="#"><span>...</span></a></li>
-                            <li><a href="#"><span>10</span></a></li>
-                            <li><a href="#"><span><i class="far fa-angle-double-right"></i></span></a></li>
-                        </ul>
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-4">
                     <div class="blog__sidebar blog__sidebar--shop mt-none-30">
                         <div class="widget mt-30">
-                            <h2 class="title">Search Here</h2>
-                            <form action="https://xpressrow.com/html/cafena/cafena/index.html" class="search-widget">
-                                <input type="search" name="search" id="search" placeholder="Serach Product">
+                            <h2 class="title">Tìm kiếm</h2>
+                            <form id="searchForm" asp-controller="Product" asp-action="Index" method="get" class="search-widget">
+                                <input type="search" name="query" id="search" placeholder="Tìm kiếm">
                                 <button type="submit"><i class="fal fa-search"></i></button>
                             </form>
                         </div>
                         <div class="widget mt-30">
-                            <h2 class="title">Categories</h2>
+                            <h2 class="title">Danh mục</h2>
                             <ul>
-                                <li class="cat-item"><a href="#0">Burger</a> <span>04</span></li>
-                                <li class="cat-item"><a href="#0">2x Pizza</a> <span>06</span></li>
-                                <li class="cat-item"><a href="#0">Cold Drinks</a> <span>08</span></li>
-                                <li class="cat-item"><a href="#0">Chicken</a> <span>10</span></li>
-                                <li class="cat-item"><a href="#0">Stuck Dish</a> <span>12</span></li>
+                                @{
+                                    foreach (var item in ViewBag.Category as List<Category>)
+                                    {
+                                        int countProduct = item.Products.Count;
+                                        <li class="cat-item"><a href="cua-hang?searchCategory=@item.Id#shop">@item.Name</a> <span>@countProduct</span></li>
+                                    }
+                                }
                             </ul>
                         </div>
-                        <div class="widget slider-range mt-30">
-                            <h2 class="title">Price Filter</h2>
-                            <div id="slider-range"></div>
-                            <p class="d-flex justify-content-between align-items-center">
-                                <input type="text" id="amount" readonly>
-                                <label for="amount">Filter</label>
-                            </p>
-                        </div>
+                        @* <div class="widget slider-range mt-30">
+                        <h2 class="title">Price Filter</h2>
+                        <div id="slider-range"></div>
+                        <p class="d-flex justify-content-between align-items-center">
+                        <input type="text" id="amount" readonly>
+                        <label for="amount">Filter</label>
+                        </p>
+                        </div> *@
                         <div class="widget mt-30">
                             <h2 class="title">top Product</h2>
                             <div class="recent-posts top-products">
@@ -963,3 +400,81 @@
 
 
 </main>
+@section Scripts {
+    <script>
+        function show(id) {
+            $('.overlay').addClass('show-popup'); // Thêm lớp 'show-popup' cho phần tử có lớp 'overlay'
+            $('.product-popup-' + id).addClass('show-popup'); // Thêm lớp 'show-popup' cho phần tử có lớp 'product-popup-{id}'
+        }
+        // $('.view').on('click', function () {
+        //     $('.overlay, .product-popup-1').addClass('show-popup');
+        // });
+    </script>
+    <script>
+        function redirect() {
+            var selectElement = document.getElementById('select');
+            var selectedValue = selectElement.value;
+
+            switch (selectedValue) {
+                case 'sort':
+                    window.location.href = '/cua-hang#shop';
+                    break;
+                case 'asc':
+                    window.location.href = '/cua-hang?query=asc#shop';
+                    break;
+                case 'desc':
+                    window.location.href = '/cua-hang?query=desc#shop';
+                    break;
+                case 'name':
+                    window.location.href = '/cua-hang?query=name#shop';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Hàm này được gọi khi trang được load lại sau khi chuyển hướng
+        window.onload = function () {
+            var selectElement = document.getElementById('select');
+            var urlParams = new URLSearchParams(window.location.search);
+            var sortParam = urlParams.get('sort');
+
+            // Nếu có tham số sort trong URL, chọn option tương ứng
+            if (sortParam) {
+                selectElement.value = sortParam;
+            }
+        }
+    </script>
+    <script>
+        document.getElementById("searchForm").addEventListener("submit", function (event) {
+            var form = event.target;
+            var searchValue = form.querySelector("#search").value;
+            var url = form.getAttribute("action") + "?search=" + encodeURIComponent(searchValue) + "#shop";
+            window.location.href = url;
+            event.preventDefault();
+        });
+    </script>
+    <script>
+        function addCart(productId, quantity) {
+            let count = 1;
+            if (quantity == 0) {
+                count = document.getElementById("txtNumber").value;
+            }
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    product: { Id: productId },
+                    quantity: count
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('Thêm vào giỏ hàng thành công!');
+                    } else {
+                        alert('Thêm vào giỏ hàng không thành công!');
+                    }
+                }
+            });
+        }
+    </script>
+}
