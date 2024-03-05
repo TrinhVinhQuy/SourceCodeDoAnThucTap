@@ -50,6 +50,7 @@ namespace Coffee.WebUI
             //    options.Cookie.IsEssential = true; // Đảm bảo rằng cookie của session là cần thiết cho ứng dụng
             //});
             builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddHttpClient();
 
             builder.Services.AddSession(options =>
             {

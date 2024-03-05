@@ -85,7 +85,7 @@ namespace Coffee.WebUI.Controllers
                 var checkEmail = _dbCoffeeDbContext.Users.Where(x => x.Email == emailClaim);
                 if (checkEmail.Count() < 1)
                 {
-                    var newUser = new User { Email = emailClaim, RoleId = 2 };
+                    var newUser = new User { Email = emailClaim, RoleId = 2 , Status = true, CreatedOn = DateTime.Now};
                     _dbCoffeeDbContext.Users.Add(newUser);
                     _dbCoffeeDbContext.SaveChanges();
                 }
