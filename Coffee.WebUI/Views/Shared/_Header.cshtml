@@ -152,7 +152,7 @@
                             </div>
                             <div class="cart cart-trigger item position-relative">
                                 <i class="fa fa-shopping-basket"></i>
-                                <span class="cart__count">3</span>
+                                <span id="txtCart" class="cart__count">0</span>
                             </div>
                         </div>
                     </div>
@@ -329,70 +329,25 @@
     </div>
 </aside>
 <!-- header end -->
+
 <aside class="cart-bar-wrapper">
     <div class="cart-bar__close">
         <a class="d-flex align-items-center justify-content-center" href="javascript:void(0);"><i class="fal fa-times"></i></a>
     </div>
     <div class="cart-bar">
         <h4 class="cart-bar__title">Cart Items - <span>4</span></h4>
-        <div class="cart-bar__lists">
-            <div class="cart-bar__item position-relative d-flex">
-                <div class="thumb">
-                    <img src="assets/images/top-grade/tg-1.png" alt="image_not_found">
-                </div>
-                <div class="content">
-                    <h4 class="title">
-                        <a href="product-details.html">Rorem ipsum dolor sit amet.</a>
-                    </h4>
-                    <span class="Giá">$19.00</span>
-                    <a href="#0" class="remove"><i class="fal fa-times"></i></a>
-                </div>
-            </div>
-            <div class="cart-bar__item position-relative d-flex">
-                <div class="thumb">
-                    <img src="assets/images/top-grade/tg-2.png" alt="image_not_found">
-                </div>
-                <div class="content">
-                    <h4 class="title">
-                        <a href="product-details.html">Rorem ipsum dolor sit amet.</a>
-                    </h4>
-                    <span class="Giá">$36.00</span>
-                    <a href="#0" class="remove"><i class="fal fa-times"></i></a>
-                </div>
-            </div>
-            <div class="cart-bar__item position-relative d-flex">
-                <div class="thumb">
-                    <img src="assets/images/top-grade/tg-3.png" alt="image_not_found">
-                </div>
-                <div class="content">
-                    <h4 class="title">
-                        <a href="product-details.html">Rorem ipsum dolor sit amet.</a>
-                    </h4>
-                    <span class="Giá">$20.00</span>
-                    <a href="#0" class="remove"><i class="fal fa-times"></i></a>
-                </div>
-            </div>
-            <div class="cart-bar__item position-relative d-flex">
-                <div class="thumb">
-                    <img src="assets/images/top-grade/tg-4.png" alt="image_not_found">
-                </div>
-                <div class="content">
-                    <h4 class="title">
-                        <a href="product-details.html">Rorem ipsum dolor sit amet.</a>
-                    </h4>
-                    <span class="Giá">$20.00</span>
-                    <a href="#0" class="remove"><i class="fal fa-times"></i></a>
-                </div>
-            </div>
+        <div class="cart-bar__lists" id="listCart">
+            
         </div>
         <div class="cart-bar__subtotal d-flex align-items-center justify-content-between">
-            <span>Sub Total:</span>
+            <span>Thành tiền:</span>
             <span>$87.00</span>
         </div>
+
         <div class="btns d-flex align-items-center justify-content-center">
-            <a href="cart.html" class="site-btn">View Cart</a>
-            <a href="checkout.html" class="site-btn site-btn__borderd">Checkout</a>
+            <a asp-controller="Cart" asp-action="Index" class="site-btn">Tới giỏ hàng</a>
+            @* <a href="checkout.html" class="site-btn site-btn__borderd"><i class="fab fa-amazon-pay"></i></a> *@
         </div>
+
     </div>
 </aside>
-<div class="overlay"></div>

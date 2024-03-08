@@ -20,6 +20,8 @@
 <body>
     <!--Header start-->
     @Html.Partial("_Header")
+    @* @Html.Partial("_Cart") *@
+    <div class="overlay"></div>
     <!--Header end-->
     @RenderBody()
     <!--Footer start-->
@@ -42,6 +44,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfpGBFn5yRPvJrvAKoGIdj1O1aO9QisgQ"></script>
     <script src="~/assets/js/jquery-ui-slider-range.js"></script>
     <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/js/cart.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

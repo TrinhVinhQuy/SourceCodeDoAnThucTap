@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Coffee.WebUI.Controllers
 {
-    [Authorize]
+
     public class CartController : Controller
     {
         private readonly DbCoffeeDbContext _dbContext;
@@ -18,7 +18,6 @@ namespace Coffee.WebUI.Controllers
             _httpContextAccessor = httpContextAccessor;
             _dbContext = dbContext;
         }
-
         public IActionResult Index()
         {
             return View();
@@ -29,15 +28,18 @@ namespace Coffee.WebUI.Controllers
             var httpContext = _httpContextAccessor.HttpContext;
             var CartModels = httpContext.Session.Get<List<CartModel>>("Cart") ?? new List<CartModel>();
             double totalPrice = (double)CartModels.Sum(item => item.ProductModel.Price * item.Quantity);
+            int CartCount = CartModels.Sum(item => item.Quantity);
 
             var responseData = new
             {
                 CartModels,
-                totalPrice
+                totalPrice,
+                CartCount,
             };
 
             return Json(responseData);
         }
+
 
         [HttpPost]
         public IActionResult AddToCart(Product product, int quantity)

@@ -70,7 +70,7 @@
                                 <div class="viewcontent__action">
                                     <span>Số lượng</span>
                                     <input type="number" id="txtNumber" placeholder="1">
-                                    <a class="site-btn" href="#" onclick="addCart('@item.ProductId','0')"><i class="fal fa-shopping-basket"></i></a>
+                                    <a class="site-btn" href="javascript:void(0)" onclick="addCart('@item.ProductId','0')"><i class="fal fa-shopping-basket"></i></a>
                                 </div>
                                 <div class="viewcontent__footer">
                                     <ul class="list-unstyled">
@@ -193,13 +193,13 @@
                                                 <div class="pp__item pp__item--2 active text-center pt-20 pb-20">
                                                     <div class="pp__action pp__action--2 d-flex align-items-center justify-content-center">
                                                         <div class="cart d-flex align-items-center justify-content-center">
-                                                            <a href="#0" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
+                                                            <a href="javascript:void(0)" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
                                                         </div>
                                                         <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="#0"><i class="fal fa-heart"></i></a>
+                                                            <a href="javascript:void(0)"><i class="fal fa-heart"></i></a>
                                                         </div>
                                                         <div class="view d-flex align-items-center justify-content-center">
-                                                            <a href="#0" onclick="show(@item.ProductId)">
+                                                            <a href="javascript:void(0)" onclick="show(@item.ProductId)">
                                                                 <i class="fal fa-eye"></i>
                                                             </a>
                                                         </div>
@@ -470,9 +470,24 @@
                 success: function (response) {
                     if (response.success) {
                         alert('Thêm vào giỏ hàng thành công!');
+                        updateCartCount();
                     } else {
                         alert('Thêm vào giỏ hàng không thành công!');
                     }
+                }
+            });
+            
+        }
+        function updateCartCount() {
+            $.ajax({
+                url: '/Cart/GetCart',
+                type: 'GET',
+                success: function (data) {
+                    console.log(data.cartCount)
+                    document.getElementById("txtCart").innerHTML = data.cartCount;
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
         }

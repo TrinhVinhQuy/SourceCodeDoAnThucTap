@@ -43,21 +43,21 @@ namespace Coffee.WebUI
                     googleOptions.ClientSecret = "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";
                 });
             builder.Services.AddHttpContextAccessor();
-            //builder.Services.AddSession(options =>
-            //{
-            //    options.IdleTimeout = TimeSpan.FromMinutes(20); // Thời gian chờ không hoạt động là 20 phút
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.IsEssential = true; // Đảm bảo rằng cookie của session là cần thiết cho ứng dụng
-            //});
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(20); // Thời gian chờ không hoạt động là 20 phút
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true; // Đảm bảo rằng cookie của session là cần thiết cho ứng dụng
+            });
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddHttpClient();
 
-            builder.Services.AddSession(options =>
-            {
-                options.Cookie.Name = ".AdventureWorks.Session";
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.IsEssential = true;
-            });
+            //builder.Services.AddSession(options =>
+            //{
+            //    options.Cookie.Name = ".AdventureWorks.Session";
+            //    options.IdleTimeout = TimeSpan.FromSeconds(10);
+            //    options.Cookie.IsEssential = true;
+            //});
             //builder.Services.Configure<TwilioOptions>(configuration.GetSection("Twilio"));
 
             var app = builder.Build();

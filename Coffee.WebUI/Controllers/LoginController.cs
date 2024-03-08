@@ -53,12 +53,12 @@ namespace Coffee.WebUI.Controllers
                 {
                     ViewData["ErrorMessage"] = "Tên đăng nhập hoặc mật khẩu không chính xác.";
 
-                    return View();
+                    return RedirectToAction("Index", "Login");
                 }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Login");
             }
         }
         public async Task<IActionResult> Logout()

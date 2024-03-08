@@ -83,6 +83,7 @@
 
 	// cart info
 	$(".cart-trigger").on("click", function (e) {
+		updateCartContent();
 		e.preventDefault();
 		$(".cart-bar-wrapper").toggleClass("show");
 		$("body").addClass("on-side");

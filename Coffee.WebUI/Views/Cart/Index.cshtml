@@ -36,63 +36,9 @@
                 <div class="cart-wrapper">
                     <div class="table-content table-responsive">
                         <div class="d-none d-sm-block" id="cartTable">
-                            @* <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="product-thumbnail ">Product Image</th>
-                                        <th class="cart-product-name ">Product Name</th>
-                                        <th class="product-price ">Price</th>
-                                        <th class="product-quantity ">Quantity</th>
-                                        <th class="product-subtotal ">subTotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cartTable">
-                                    <tr class="d-xs-none">
-                                    <td class="product-thumbnail">
-                                    <a href="#" class="img">
-                                    <img src="assets/images/products/t-p-1.png" alt="">
-                                    </a>
-                                    <a href="#" class="product-remove"><i class="fal fa-plus"></i></a>
-                                    <a href="#" class="product-remove"><i class="fal fa-minus"></i></a>
-                                    <a href="#" class="product-remove"><i class="fal fa-times"></i></a>
-                                    </td>
-                                    <td class="product-name"><a href="#">ESPRESSO RISTRETTO</a></td>
-                                    <td class="product-price"><span class="amount">$130.00</span></td>
-                                    <td class="product-quantity">
-                                    <input type="number" placeholder="2">
-                                    </td>
-                                    <td class="product-subtotal"><span class="amount">$130.00</span></td>
-                                    </tr> 
-                                </tbody>
-                            </table> *@
                         </div>
                         <!--view mobie-->
                         <div class="d-sm-none" id="cartTableMobie">
-                            @* <table class="table" style="width: max-content">
-                                <thead>
-                                    <tr>
-                                        <th class="product-thumbnail ">Sản phẩm</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="d-sm-none">
-                                        <td class="product-thumbnail">
-                                            <a href="#" class="img">
-                                                <img src="assets/images/products/t-p-1.png" alt="">
-                                            </a>
-                                            <div>
-                                                <div class="product-remove"><span class="amount">ESPRESSO RISTRETTO</span></div>
-                                                <a href="#" class="product-remove"><i class="fal fa-plus"></i></a>
-                                                <span class="product-remove" style="color: #000;">1</span>
-                                                <a href="#" class="product-remove"><i class="fal fa-minus"></i></a>
-                                                <a href="#" class="product-remove"><i class="fal fa-times"></i></a>
-                                                <div class="product-remove"><span class="amount">$130.00</span></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table> *@
                         </div>
                     </div>
                 </div>
@@ -110,7 +56,17 @@
                         <span>Thành tiền</span>
                         <span id="txtTotal">0 đ</span>
                     </div>
-                    <a href="checkout.html" class="site-btn">Tiền hành thanh toán</a>
+                    @{
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="VnPay" asp-action="Index" class="site-btn">Tiền hành thanh toán</a>
+                        }
+                        else
+                        {
+                            <center style="color:orangered">Vui lòng đăng nhập để mua hàng</center>
+                            <a asp-controller="VnPay" asp-action="Index" class="site-btn">Tiền hành thanh toán</a>
+                        }
+                    }
                 </div>
             </div>
         </div>
