@@ -20,6 +20,12 @@ namespace Coffee.WebUI.Controllers
         }
         public IActionResult Index()
         {
+            var httpContext = _httpContextAccessor.HttpContext;
+            var CartModels = httpContext.Session.Get<List<CartModel>>("Cart") ?? new List<CartModel>();
+            if (CartModels.Count()>0)
+            {
+                ViewBag.Cart = "True";
+            }
             return View();
         }
 

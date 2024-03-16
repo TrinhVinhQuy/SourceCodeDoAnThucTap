@@ -13,7 +13,7 @@ namespace Coffee.DATA.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
-        public bool? Status { get; set; }
+        public bool? Status { get; set; } 
         public DateTime? CreatedOn { get; set; }
     }
 }

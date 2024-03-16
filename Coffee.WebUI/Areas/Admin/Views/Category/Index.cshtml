@@ -1,0 +1,154 @@
+﻿@{
+    ViewData["Title"] = "Danh mục sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <a href="#" class="m-0 font-weight-bold text-primary">Thêm danh mục mới</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên danh mục</th>
+                        <th>Url</th>
+                        <th>#</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody id="listCategory">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sửa danh mục</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-3">
+                <input type="hidden" id="categoryId" />
+                Tên danh mục <input type="text" name="name" class="form form-control" id="txtModalName" value="" placeholder="Tên danh mục" />
+                <br />
+                Url danh mục <input type="text" name="name" class="form form-control" id="txtModalUrl" value="Url danh mục" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btnSave">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/js/demo/datatables-demo.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click', '.edit-category', function () {
+                var categoryName = $(this).data('name');
+                $('#txtModalName').val(categoryName);
+                var categoryUrl = $(this).data('url');
+                $('#txtModalUrl').val(categoryUrl);
+                var categoryId = $(this).data('id');
+                $('#categoryId').val(categoryId);
+            });
+
+            // Gọi hàm getCategoryList() trước khi gắn sự kiện click cho nút "Lưu"
+            getCategoryList();
+
+            // Sau đó gắn sự kiện click cho nút "Lưu"
+            $('#btnSave').click(function () {
+                var categoryId = $('#categoryId').val();
+                var categoryName = $('#txtModalName').val();
+                var categoryUrl = $('#txtModalUrl').val();
+
+                if (categoryId != "" && categoryName != "" && categoryUrl != "") {
+                    $.ajax({
+                        url: '/Admin/Category/Edit',
+                        type: 'POST',
+                        data: {
+                            Id: categoryId,
+                            Name: categoryName,
+                            URL: categoryUrl,
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                alert('Cập nhật thành công!');
+                                // Cập nhật thành công, có thể làm gì đó ở đây (ví dụ: đóng modal, làm mới danh sách, vv).
+                                $('#logoutModal').modal('hide');
+                                // Cập nhật danh sách danh mục
+                                getCategoryList();
+                            } else {
+                                alert('Có lỗi xảy ra khi cập nhật danh mục!');
+                            }
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra khi gửi yêu cầu!');
+                        }
+                    });
+                } else {
+                    alert('Các trường không được để trống!');
+                }
+            });
+
+            
+            
+        });
+        function getCategoryList() {
+            $.ajax({
+                url: '/Admin/Category/GetAll',
+                type: 'Get',
+                success: function (response) {
+                    if (response.success) {
+                        var categories = response.categories;
+                        var tableBody = $('#listCategory');
+                        tableBody.empty();
+
+                        categories.forEach(function (category) {
+                            var row = $('<tr>');
+                            row.append($('<td>').text(category.name));
+                            row.append($('<td>').text(category.url));
+                            row.append($('<td>').html('<a href="javascript:void(0)" class="edit-category" data-id="' + category.id + '" data-name="' + category.name + '"data-url="' + category.url + '" data-toggle="modal" data-target="#logoutModal" > Sửa '));
+                            row.append($('<td>').html('<a href="javascript:void(0)" onclick="del(' + category.id + ')" class="delete-category" data-id="' + category.id + '">Xóa</a>'));
+                            tableBody.append(row);
+                        });
+                    } else {
+                        alert('Có lỗi xảy ra khi xóa danh mục!');
+                    }
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra khi gửi yêu cầu!');
+                }
+            });
+        };
+        function del(categoryId) {
+            if (confirm("Bạn có chắc chắn muốn xóa danh mục này không?")) {
+                $.ajax({
+                    url: '/Admin/Category/Delete',
+                    type: 'Delete',
+                    data:{ Id: categoryId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Danh mục đã được xóa thành công.');
+                            getCategoryList();
+                        } else {
+                            alert('Có lỗi xảy ra khi xóa danh mục!');
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi gửi yêu cầu xóa danh mục!');
+                    }
+                });
+            }
+        }
+    </script>
+}

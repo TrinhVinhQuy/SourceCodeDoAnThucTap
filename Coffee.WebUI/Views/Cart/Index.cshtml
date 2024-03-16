@@ -3,7 +3,6 @@
 }
 @section Styles {
 }
-
 <main>
     <!-- breadcrumb area start -->
     <section class="breadcrumb-area pt-140 pb-140 bg_img" data-overlay="dark" data-opacity="5" data-background="../assets/images/bg/testimonial-bg-2.jpg">
@@ -57,14 +56,18 @@
                         <span id="txtTotal">0 đ</span>
                     </div>
                     @{
+
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a asp-controller="VnPay" asp-action="Index" class="site-btn">Tiền hành thanh toán</a>
+                            if (ViewBag.Cart == "True")
+                            {
+                                <a asp-controller="VnPay" asp-action="Index" class="site-btn">Tiền hành thanh toán</a>
+                            }
                         }
                         else
                         {
                             <center style="color:orangered">Vui lòng đăng nhập để mua hàng</center>
-                            <a asp-controller="VnPay" asp-action="Index" class="site-btn">Tiền hành thanh toán</a>
+                            <a asp-controller="Login" asp-action="Index" class="site-btn">Đăng nhập</a>
                         }
                     }
                 </div>

@@ -74,7 +74,7 @@ namespace Coffee.WebUI.Controllers
                 {
                     var httpContext = _httpContextAccessor.HttpContext;
                     var CartModels = httpContext.Session.Get<List<CartModel>>("Cart") ?? new List<CartModel>();
-                    var _emailUser = User.FindFirst(ClaimTypes.Name)?.Value;
+                    var _emailUser = User.FindFirst(ClaimTypes.Email)?.Value;
                     var _userId = await _db.Users.FirstAsync(x => x.Email.Contains(_emailUser));
                     var _order = new Order
                     {
@@ -100,8 +100,8 @@ namespace Coffee.WebUI.Controllers
                             Quanlity = item.Quantity,
                         };
                         await _db.OrderDetails.AddAsync(_orderDetail);
+                        await _db.SaveChangesAsync();
                     }
-                    await _db.SaveChangesAsync();
                     ViewBag.ResponseCode = "00";
                     return View(model);
                 }
@@ -127,67 +127,5 @@ namespace Coffee.WebUI.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
-        //public async Task<IActionResult> ConfirmPay([FromQuery] ConfirmPayViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (model.vnp_ResponseCode == "00" && model.vnp_TransactionStatus == "00")
-        //        {
-        //            var httpContext = _httpContextAccessor.HttpContext;
-        //            var CartModels = httpContext.Session.Get<List<CartModel>>("Cart") ?? new List<CartModel>();
-        //            var _emailUser = User.FindFirst(ClaimTypes.Name)?.Value;
-        //            var _userId = await _db.Users.FirstAsync(x => x.Email.Contains(_emailUser));
-        //            var _order = new Order
-        //            {
-        //                UserId = _userId.Id,
-        //                CreatedOn = DateTime.Now,
-        //                Status = true,
-        //                InvoiceNumber = model.vnp_TxnRef,
-        //                TradingCode = model.vnp_TransactionNo
-        //            };
-        //            _db.Orders.AddAsync(_order);
-        //            _db.SaveChangesAsync();
-        //            var _orderUserId = await _db.Orders
-        //                                .Where(x => x.UserId == _userId.Id)
-        //                                .OrderByDescending(x => x.Id) // Sắp xếp theo OrderId giảm dần
-        //                                .FirstAsync();
-        //            foreach(var item in CartModels)
-        //            {
-        //                var _orderDetail = new OrderDetail
-        //                {
-        //                    OrderId = _orderUserId.Id,
-        //                    ProductId = item.ProductModel.ProductId,
-        //                    Price = item.ProductModel.Price,
-        //                    Quanlity = item.Quantity,
-        //                };
-        //                _db.OrderDetails.AddAsync(_orderDetail);
-        //            }
-        //            _db.SaveChangesAsync();
-        //            ViewBag.ResponseCode = "00";
-        //            return View();
-        //        }
-        //        else
-        //        {
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "07" ? "Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường)." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "09" ? "Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "10" ? "Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần" : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "11" ? "Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "12" ? "Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "13" ? "Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "24" ? "Giao dịch không thành công do: Khách hàng hủy giao dịch" : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "51" ? "Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "65" ? "Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "75" ? "Ngân hàng thanh toán đang bảo trì." : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "79" ? "Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch" : null;
-        //            ViewBag.ResponseCode = model.vnp_ResponseCode == "99" ? "Có lỗi vui lòng liên hệ với Admin" : null;
-        //            return View();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //}
     }
 }

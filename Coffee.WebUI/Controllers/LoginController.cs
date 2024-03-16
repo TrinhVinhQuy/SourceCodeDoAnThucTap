@@ -29,6 +29,7 @@ namespace Coffee.WebUI.Controllers
         }
         public async Task<IActionResult> LoginSave(LoginModel model)
         {
+            // Quy@0104
             if (ModelState.IsValid)
             {
                 var hashedPassword = md5.ComputeMD5Hash(model.Password);
@@ -39,7 +40,8 @@ namespace Coffee.WebUI.Controllers
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(ClaimTypes.Role, "User")
+                        new Claim(ClaimTypes.Name, user.Name),
+                        new Claim(ClaimTypes.Role, role.Name)
                     };
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

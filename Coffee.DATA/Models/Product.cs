@@ -15,8 +15,8 @@ namespace Coffee.DATA.Models
         public string? Keywords { get; set; }
         public string? Image { get; set; }
         public int? CategoryId { get; set; }
-        public Category Category { get; set; }
-        public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-        public ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+        public Category? Category { get; set; }
+        public ICollection<OrderDetail>? OrderDetails { get; set; } = new List<OrderDetail>();
+        public ICollection<ProductImage>? ProductImages { get; set; } = new List<ProductImage>();
     }
 }

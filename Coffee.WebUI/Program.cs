@@ -4,6 +4,10 @@ using Coffee.WebUI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Coffee.DATA.Models;
+using Coffee.DATA.Repository;
 
 
 namespace Coffee.WebUI
@@ -42,6 +46,7 @@ namespace Coffee.WebUI
                     googleOptions.ClientId = "42557447431-n5q58cmqp5baqubhi07qshub2m03veoj.apps.googleusercontent.com";
                     googleOptions.ClientSecret = "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";
                 });
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSession(options =>
             {
@@ -51,6 +56,7 @@ namespace Coffee.WebUI
             });
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddHttpClient();
+
 
             //builder.Services.AddSession(options =>
             //{
@@ -74,30 +80,37 @@ namespace Coffee.WebUI
             app.UseStaticFiles();
             app.UseSession(); // Kích hoạt việc sử dụng Session
             app.UseRouting();
-            //app.Use(async (context, next) =>
-            //{
-            //    await next();
+            app.Use(async (context, next) =>
+            {
+                await next();
 
-            //    // Nếu không tìm thấy trang
-            //    if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
-            //    {
-            //        // Thiết lập trạng thái response
-            //        context.Response.StatusCode = 404;
+                // Nếu không tìm thấy trang
+                if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
+                {
+                    // Thiết lập trạng thái response
+                    context.Response.StatusCode = 404;
 
-            //        // Gửi thông báo "That page can’t be found."
-            //        context.Response.Redirect("/Home/Error");
-            //    }
-            //});
+                    // Gửi thông báo "That page can’t be found."
+                    context.Response.Redirect("/Home/Error");
+                }
+            });
             app.UseAuthorization();
             ConfigureEndpoints(app);
-            
+            //app.MapAreaControllerRoute(
+            //    name: "Admin",
+            //    areaName: "Admin",
+            //    pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
+            //    );
+            //app.MapControllerRoute(
+            //    name: "default",
+            //    pattern: "{controller=Home}/{action=Index}/{id?}");
             app.Run();
         }
         private static void ConfigureEndpoints(IApplicationBuilder app)
         {
             app.UseEndpoints(endpoints =>
             {
-
+               
                 endpoints.MapControllerRoute(
                     name: "login",
                     pattern: "login",
@@ -130,15 +143,19 @@ namespace Coffee.WebUI
                     name: "menu",
                     pattern: "thuc-don",
                     defaults: new { controller = "Menu", action = "Index" });
-
                 endpoints.MapControllerRoute(
                     name: "productdetails",
                     pattern: "san-pham-{url}",
                     defaults: new { controller = "Product", action = "ProductDetails" }
                 );
+                endpoints.MapAreaControllerRoute(
+                   name: "Admin",
+                   areaName: "Admin",
+                   pattern: "Admin/{controller=Home}/{action=Index}");
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}");
+                
             });
         }
     }

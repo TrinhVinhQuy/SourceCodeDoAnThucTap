@@ -9,23 +9,19 @@ using Coffee.DATA.Models;
 
 namespace Coffee.DATA
 {
-    public class DbCoffeeDbContext: DbContext
+    public class DbCoffeeDbContext : DbContext
     {
         public DbCoffeeDbContext() { }
         public DbCoffeeDbContext(DbContextOptions<DbCoffeeDbContext> options) : base(options) { }
-        public  DbSet<Category> Categories { get; set; }
-
-        public  DbSet<New> News { get; set; }
-
-        public  DbSet<Order> Orders { get; set; }
-
-        public  DbSet<OrderDetail> OrderDetails { get; set; }
-
-        public  DbSet<Product> Products { get; set; }
-
-        public  DbSet<Role> Roles { get; set; }
-
-        public  DbSet<User> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<New> News { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Contact> Contact { get; set; }
+        public DbSet<Book> Book { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder()
