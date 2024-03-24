@@ -247,7 +247,6 @@ namespace Coffee.DATA.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CategoryId")
-                        .IsRequired()
                         .HasColumnType("int")
                         .HasColumnName("CategoryID");
 
@@ -426,8 +425,6 @@ namespace Coffee.DATA.Migrations
                     b.HasOne("Coffee.DATA.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK_Product_Category");
 
                     b.Navigation("Category");

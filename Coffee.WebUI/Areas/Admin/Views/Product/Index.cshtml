@@ -18,48 +18,30 @@
 
     </style>
 }
-@model IEnumerable<Coffee.DATA.Models.Product>
+@* @model IEnumerable<Coffee.DATA.Models.Product> *@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <a href="javascript:void(0)" data-toggle="modal" data-target="#inputModal" class="m-0 font-weight-bold text-primary">Thêm danh mục mới</a>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table id="dataTable" class="display" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Tên </th>
                         <th>Hình ảnh</th>
                         <th>Giá</th>
                         <th>Mô tả</th>
+                        <th>Từ khoá</th>
                         <th>#</th>
                         <th>#</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @{
-                        foreach (var item in Model)
-                        {
-                            <tr>
-                                <th>@item.Name </th>
-                                <th>
-                                    <img class="img img-fluid" src="~/@item.Image" />
-                                </th>
-                                <th>@item.Price </th>
-                                <th>@item.Description </th>
-                                <th>
-                                    <a data-toggle="modal" data-target="#logoutModal">Sửa</a>
-                                </th>
-                                <th><a>Xoá</a></th>
-                            </tr>
-                        }
-                    }
-                </tbody>
             </table>
         </div>
     </div>
 </div>
-<!-- Modal -->
+<!-- Modal Thêm-->
 <div class="modal fade" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="inputModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -77,7 +59,7 @@
                 </div>
                 <div class="form-group">
                     <label for="txtModalPrice">Đơn giá</label>
-                    <input type="text" name="name" class="form-control" id="txtModalPrice" placeholder="Đơn giá" />
+                    <input type="number" name="name" class="form-control" id="txtModalPrice" placeholder="Đơn giá" />
                 </div>
                 <div class="form-group">
                     <label for="txtModalDescription">Mô tả</label>
@@ -122,9 +104,64 @@
 </div>
 
 @section Scripts {
-    <script src="~/admin/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="~/admin/js/demo/datatables-demo.js"></script>
+    <script>
+        $('#dataTable').DataTable({
+            "ajax": {
+                "url": "/Admin/Product/GetAllProduct",
+                "type": "GET",
+                "dataSrc": "products."
+            },
+            "columns": [
+                { "data": "name" },
+                {
+                    "data": "image",
+                    "render": function (data, type, row) {
+                        return '<img src="' + data + '" alt="Product Image" width="100">';
+                    }
+                },
+                { "data": "price" },
+                { "data": "description" },
+                { "data": "keywords" },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<a href="/Admin/ProductDetail?id=' + data.id + '" target="_blank" class="btn btn-primary">Sửa</a>';
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<button class="btn btn-danger delete-product" data-id="' + data.id + '">Xóa</button>';
+                    }
+                }
+            ],
+            "lengthMenu": [5, 10, 25, 50, { label: 'Tất cả', value: -1 }],
+            "language": {
+                processing: "Message khi đang tải dữ liệu",
+                search: "Tìm kiếm",
+                lengthMenu: "Điều chỉnh số lượng bản ghi trên 1 trang _MENU_ ",
+                info: "Bản ghi từ _START_ đến _END_ Trong tổng cộng _TOTAL_ bản ghi",
+                infoEmpty: "Không có dữ liệu, Hiển thị 0 bản ghi trong _MAX_ tổng cộng 0 ",
+                infoFiltered: "(Không có sản phẩm trong _MAX_ bản ghi)",
+                // infoPostFix: "Alo Alo", // Cái này khi thêm vào nó sẽ đứng sau info
+                loadingRecords: "",
+                zeroRecords: "Không có dữ liệu theo tìm kiếm",
+                emptyTable: "Không có dữ liệu",
+                paginate: {
+                    first: "Trang đầu",
+                    previous: "Trang trước",
+                    next: "Trang sau",
+                    last: "Trang cuối"
+                },
+                aria: {
+                    sortAscending: ": Message khi đang sắp xếp theo column",
+                    sortDescending: ": Message khi đang sắp xếp theo column",
+                }
+            },
+            "processing": true,
+            "serverSide": false,
+        });
+    </script>
     <script>
         function previewMainImage(event) {
             var input = event.target;
@@ -143,7 +180,6 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
         // Xóa hình ảnh chính khi người dùng nhấp vào nút xoá
         document.getElementById('deleteMainImage').addEventListener('click', function () {
             var input = document.getElementById('mainImage');
@@ -155,10 +191,6 @@
             preview.style.display = 'none'; // Ẩn hình ảnh được xem trước
             deleteButton.style.display = 'none'; // Ẩn nút xoá hình ảnh
         });
-
-
-
-
         $(document).ready(function () {
             $('#additionalImages').change(function () {
                 $('#preview').html(''); // Xóa bất kỳ hình ảnh trước đó được xem trước
@@ -204,38 +236,71 @@
                 var mainImage = $('#mainImage')[0].files[0]; // Lấy hình ảnh chính
                 var additionalImages = $('#additionalImages')[0].files; // Lấy hình ảnh phụ
 
-                // Tạo FormData object để chứa dữ liệu sản phẩm và hình ảnh
-                var formData = new FormData();
-                formData.append('Name', productName);
-                formData.append('Price', productPrice);
-                formData.append('Description', productDescription);
-                formData.append('Keywords', productKeywords);
-                formData.append('CategoryId', productCategory);
-                formData.append('MainImage', mainImage); // Thêm hình ảnh chính vào FormData
+                // Kiểm tra xem tất cả các trường có giá trị không
+                if (productName && productPrice && productDescription && productKeywords && productCategory && mainImage && additionalImages.length > 0) {
+                    // Tạo FormData object để chứa dữ liệu sản phẩm và hình ảnh
+                    var formData = new FormData();
+                    formData.append('Name', productName);
+                    formData.append('Price', productPrice);
+                    formData.append('Description', productDescription);
+                    formData.append('Keywords', productKeywords);
+                    formData.append('CategoryId', productCategory);
+                    formData.append('MainImage', mainImage); // Thêm hình ảnh chính vào FormData
 
-                // Thêm các hình ảnh phụ vào FormData
-                for (var i = 0; i < additionalImages.length; i++) {
-                    formData.append('AdditionalImages', additionalImages[i]);
-                }
-
-                // Thực hiện AJAX request để gửi dữ liệu đến server
-                $.ajax({
-                    url: '@Url.Action("CreateProduct", "Product")',
-                    type: 'POST',
-                    processData: false, // Không xử lý dữ liệu
-                    contentType: false, // Không thiết lập loại nội dung
-                    data: formData,
-                    success: function (response) {
-                        // Xử lý kết quả trả về từ server
-                        $('#inputModal').modal('hide');
-                        // Refresh danh sách sản phẩm hoặc làm gì đó khác
-                    },
-                    error: function (xhr, status, error) {
-                        // Xử lý lỗi
-                        console.error(xhr.responseText);
+                    // Thêm các hình ảnh phụ vào FormData
+                    for (var i = 0; i < additionalImages.length; i++) {
+                        formData.append('AdditionalImages', additionalImages[i]);
                     }
-                });
+
+                    // Thực hiện AJAX request để gửi dữ liệu đến server
+                    $.ajax({
+                        url: '@Url.Action("CreateProduct", "Product")',
+                        type: 'POST',
+                        processData: false, // Không xử lý dữ liệu
+                        contentType: false, // Không thiết lập loại nội dung
+                        data: formData,
+                        success: function (response) {
+                            $('#dataTable').DataTable().ajax.reload();
+                            $('#inputModal').modal('hide');
+                            showAlertModal('success', response.message);
+                        },
+                        error: function (xhr, status, error) {
+                            // Xử lý lỗi
+                            console.error(xhr.responseText);
+                        }
+                    });
+
+                } else {
+                    showAlertModal('danger', "Vui lòng nhập đủ các trường và chọn hình ảnh");
+                }
             });
         });
+    </script>
+    <script>
+        $(document).on('click', '.delete-product', function () {
+            var productId = $(this).data('id');
+            del(productId); // Gọi hàm del để xóa danh mục
+        });
+
+        function del(productId) {
+            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")) {
+                $.ajax({
+                    url: '/Admin/Product/Delete',
+                    type: 'Delete',
+                    data: { Id: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#dataTable').DataTable().ajax.reload();
+                            showAlertModal('success', response.message);
+                        } else {
+                            showAlertModal('danger', response.message);
+                        }
+                    },
+                    error: function () {
+                        showAlertModal('danger', 'Có lỗi xảy ra khi gửi yêu cầu!');
+                    }
+                });
+            }
+        }
     </script>
 }

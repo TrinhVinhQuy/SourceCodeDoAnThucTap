@@ -1,13 +1,8 @@
 ﻿using Coffee.DATA;
-using Coffee.WebUI;
-using Coffee.WebUI.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Configuration;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Coffee.DATA.Models;
 using Coffee.DATA.Repository;
+using Coffee.DATA.Common;
+using Microsoft.AspNetCore.SignalR;
 
 
 namespace Coffee.WebUI
@@ -56,7 +51,6 @@ namespace Coffee.WebUI
             });
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddHttpClient();
-
 
             //builder.Services.AddSession(options =>
             //{
@@ -110,7 +104,6 @@ namespace Coffee.WebUI
         {
             app.UseEndpoints(endpoints =>
             {
-               
                 endpoints.MapControllerRoute(
                     name: "login",
                     pattern: "login",

@@ -1,8 +1,11 @@
-﻿using Coffee.DATA.Common;
+﻿using Coffee.DATA;
+using Coffee.DATA.Common;
 using Coffee.DATA.Models;
 using Coffee.DATA.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 namespace Coffee.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -13,7 +16,7 @@ namespace Coffee.WebUI.Areas.Admin.Controllers
         private readonly IRepository<Category> _repositoryCate;
         private readonly IRepository<ProductImage> _repositoryProImage;
         private readonly IWebHostEnvironment _environment;
-        public ProductController(IRepository<Product> repository, IRepository<Category> repositoryCate, IWebHostEnvironment environment, IRepository<ProductImage> repositoryProImage)
+        public ProductController(IRepository<Product> repository, DbCoffeeDbContext db, IRepository<Category> repositoryCate, IWebHostEnvironment environment, IRepository<ProductImage> repositoryProImage)
         {
             _repository = repository;
             _repositoryCate = repositoryCate;
@@ -24,8 +27,13 @@ namespace Coffee.WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Category = await _repositoryCate.GetAllAsync();
+            return View();
+        }
+        public async Task<IActionResult> GetAllProduct()
+        {
             var products = await _repository.GetAllAsync();
-            return View(products);
+            products = products.Where(x => x.Status != null).ToList();
+            return Json(new { success = true, products });
         }
         [HttpPost]
         public async Task<IActionResult> CreateProduct(Product models, IFormFile mainImage, IFormFileCollection additionalImages)
@@ -36,7 +44,7 @@ namespace Coffee.WebUI.Areas.Admin.Controllers
                 // Lưu hình ảnh chính
                 if (mainImage != null && mainImage.Length > 0)
                 {
-                    var urlImg = await SaveImage(mainImage);
+                    var urlImg = "/" + await SaveImage(mainImage);
                     var _url = helper.ConvertToSlug(models.Name);
                     var product = new Product
                     {
@@ -54,7 +62,7 @@ namespace Coffee.WebUI.Areas.Admin.Controllers
                     {
                         if (image != null && image.Length > 0)
                         {
-                            urlImg = await SaveImage(image);
+                            urlImg = "/" + await SaveImage(image);
                             var productImage = new ProductImage
                             {
                                 UrlImage = urlImg,
@@ -65,7 +73,29 @@ namespace Coffee.WebUI.Areas.Admin.Controllers
                     }
                 }
 
-                return Json(new { success = true });
+                return Json(new { success = true, message = "Thêm sản phẩm thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var product = await _repository.GetByIdAsync(id);
+                if (product != null)
+                {
+                    product.Status = null;
+                    await _repository.UpdateAsync(product);
+                    return Json(new { success = true, message = "Xoá thành công!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Sản phẩm không tồn tại!" });
+                }
             }
             catch (Exception ex)
             {
