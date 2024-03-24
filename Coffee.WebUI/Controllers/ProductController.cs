@@ -13,8 +13,10 @@ namespace Coffee.WebUI.Controllers
         {
             _db = dbCoffeeDbContext;
         }
-        public IActionResult Index(string? query, string? search, int? searchCategory)
+        public IActionResult Index(string? query, string? search, int? searchCategory, int? page)
         {
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
             var productsQuery = _db.Products
                 .Include(p => p.ProductImages)
                 .Select(p => new ProductModel

@@ -44,21 +44,13 @@
             <div class="col-xl-12 text-center">
                 <div class="popular-menu__wrapper m-auto d-inline-block">
                     <div class="popular-menu__filter d-flex justify-content-center align-items-center mb-55">
+                        <button class="active" data-filter="*">Tất cả</button>
                         @{
-                            var i = 1;
                             var listCategory = ViewBag.ListCategory as IEnumerable<Category>;
                             foreach (var item in listCategory)
                             {
                                 var datafilter = ".cat" + item.Id;
-                                if (i == 1)
-                                {
-                                    <button class="active" data-filter="@datafilter">@item.Name</button>
-                                }
-                                else
-                                {
-                                    <button data-filter="@datafilter">@item.Name</button>
-                                }
-                                i++;
+                                <button data-filter="@datafilter">@item.Name</button>
                             }
                         }
                     </div>
