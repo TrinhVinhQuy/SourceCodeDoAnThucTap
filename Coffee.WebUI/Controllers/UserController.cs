@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Coffee.DATA.Models;
+using Coffee.DATA.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 //using Twilio;
@@ -10,31 +12,21 @@ namespace Coffee.WebUI.Controllers
     [Authorize]
     public class UserController : Controller
     {
-
-        public IActionResult Index()
+        private readonly IRepository<User> _userRepository;
+        public UserController(IRepository<User> userRepository)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                ViewBag.Name = User.FindFirst(ClaimTypes.Name)?.Value;
-                ViewBag.NameIdentifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                ViewBag.GivenName = User.FindFirst(ClaimTypes.GivenName)?.Value;
-                ViewBag.Surname = User.FindFirst(ClaimTypes.Surname)?.Value;
-                ViewBag.Email = User.FindFirst(ClaimTypes.Email)?.Value;
-                ViewBag.Role = User.FindFirst(ClaimTypes.Role)?.Value;
-            }
-            return View();
+            _userRepository = userRepository;
         }
-        //public Task SendOTP()
-        //{
-        //    var accountSid = "AC6fd617572dc4c4f1731102da9aa95a11";
-        //    var authToken = "6e898044665551af057f99f90384c102";
-        //    TwilioClient.Init(accountSid, authToken);
-
-        //    return MessageResource.CreateAsync(
-        //      to: new PhoneNumber("+84946453657"),
-        //      from: new PhoneNumber("12202723681"),
-        //      body: "180729");
-        //}
-
+        public async Task<IActionResult> Index()
+        {
+            var _user = await _userRepository.GetAllAsync();
+            var _userDetail = _user.First(x => x.Email == User.FindFirst(ClaimTypes.Email)?.Value);
+            return View(_userDetail);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(User model)
+        {
+            return Json(model);
+        }
     }
 }

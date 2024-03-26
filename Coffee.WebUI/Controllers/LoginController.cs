@@ -43,7 +43,7 @@ namespace Coffee.WebUI.Controllers
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(ClaimTypes.Name, user.Name),
+                        //new Claim(ClaimTypes.Name, user.Name),
                         new Claim(ClaimTypes.Role, role.Name)
                     };
 
