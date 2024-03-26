@@ -1,10 +1,48 @@
 ﻿@using Coffee.DATA.Models
 @model IEnumerable<ProductModel>;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
 @{
     ViewData["Title"] = "Cửa hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Styles {
+    <style>
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+        }
 
+        .page-item {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .page-link {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            color: #333;
+            text-decoration: none;
+        }
+
+            .page-link:hover {
+                background-color: #e9e9e9;
+            }
+
+        .page-item.active .page-link {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .page-item.disabled .page-link {
+            color: #868e96;
+            pointer-events: none;
+            cursor: default;
+        }
+    </style>
+}
 <main>
     <!-- breadcrumb area start -->
     <section class="breadcrumb-area pt-140 pb-140 bg_img" data-overlay="dark" data-opacity="5" data-background="../assets/images/bg/testimonial-bg-2.jpg">
@@ -41,7 +79,7 @@
                         <div class="col-md-4 align-self-center">
                             <div class="quickview d-flex align-items-center justify-content-center">
                                 <div class="quickview__thumb">
-                                    <img src="assets/images/products/pp-1.png" alt="" />
+                                    <img src="@item.Image" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -100,7 +138,7 @@
                     <div class="shop-filter-wrapper d-flex justify-content-between align-items-center mb-30">
                         <div class="sf-left">
                             <div class="show-text">
-                                <span>Có @Model.Count() sản phẩm</span>
+                                <span>Có @Model.Count() sản phẩm trong tổng @ViewBag.CountProducts sản phẩm</span>
                             </div>
                         </div>
                         <div class="sf-right d-flex justify-content-end align-items-center">
@@ -141,9 +179,7 @@
                                                         <div class="cart d-flex align-items-center justify-content-center">
                                                             <a href="javascript:void(0)" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
                                                         </div>
-                                                        <div class="wishlist d-flex align-items-center justify-content-center">
-                                                            <a href="javascript:void(0)"><i class="fal fa-heart"></i></a>
-                                                        </div>
+
                                                         <div class="view d-flex align-items-center justify-content-center">
                                                             <a href="javascript:void(0)" onclick="show(@item.ProductId)">
                                                                 <i class="fal fa-eye"></i>
@@ -184,51 +220,73 @@
                         <div class="tab-pane fade mt-none-30" id="shop-tab-2" role="tabpanel" aria-labelledby="shop-tab-2-tab">
                             <div class="row">
                                 @{
-                                    foreach (var item in Model)
+                                    if (Model.Count() > 0)
                                     {
-                                        <div class="col-xl-12 mt-30">
-                                            <div class="pp__item pp__item--2 pp__item--list active text-center pt-30 pb-25">
-                                                <div class="row">
-                                                    <div class="col-lg-4 col-md-4">
-                                                        <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
-                                                            <img class="default" style="width: 190px;height: 150px;" src="@item.Image" alt="">
-                                                            <img class="on-hover" style="width: 190px;height: 150px;" src="@item.ProductImages.First().ImageUrl" alt="">
+                                        foreach (var item in Model)
+                                        {
+                                            <div class="col-xl-12 mt-30">
+                                                <div class="pp__item pp__item--2 pp__item--list active text-center pt-30 pb-25">
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4">
+                                                            <div class="pp__thumb pp__thumb--2 pp__thumb--list m-0">
+                                                                <img class="default" style="width: 190px;height: 150px;" src="@item.Image" alt="">
+                                                                <img class="on-hover" style="width: 190px;height: 150px;" src="@item.ProductImages.First().ImageUrl" alt="">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-lg-8 col-md-8">
-                                                        <div class="pp__content pp__content--2 pp__content--list m-0">
-                                                            <div class="pp__c-top d-flex align-items-center">
-                                                                <div class="pp__cat pp__cat--2">
-                                                                    <a href="#0">@item.categoryName</a>
+                                                        <div class="col-lg-8 col-md-8">
+                                                            <div class="pp__content pp__content--2 pp__content--list m-0">
+                                                                <div class="pp__c-top d-flex align-items-center">
+                                                                    <div class="pp__cat pp__cat--2">
+                                                                        <a href="#0">@item.categoryName</a>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <h4 class="pp__title pp__title--2 pp__title--list">
-                                                                <a href="product-details.html">@item.Name</a>
-                                                            </h4>
-                                                            <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
-                                                                <h6 class="label">Giá - </h6>
-                                                                <span class="price"> @item.Price đ / <span class="regular"><del>$348</del></span></span>
-                                                            </div>
-                                                            <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
-                                                                <div class="cart d-flex align-items-center justify-content-center">
-                                                                    <a href="#0" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
+                                                                <h4 class="pp__title pp__title--2 pp__title--list">
+                                                                    <a href="product-details.html">@item.Name</a>
+                                                                </h4>
+                                                                <div class="pp__price pp__price--2 pp__price--list d-flex align-items-center">
+                                                                    <h6 class="label">Giá - </h6>
+                                                                    <span class="price"> @item.Price đ / <span class="regular"><del>$348</del></span></span>
                                                                 </div>
-                                                                <div class="wishlist d-flex align-items-center justify-content-center">
-                                                                    <a href="#0"><i class="fal fa-heart"></i></a>
-                                                                </div>
-                                                                <div class=" d-flex align-items-center justify-content-center">
-                                                                    <a href="#0" onclick="show(@item.ProductId)"><i class="fal fa-eye"></i></a>
+                                                                <div class="pp__action pp__action--2 pp__action--list d-flex align-items-center mt-15">
+                                                                    <div class="cart d-flex align-items-center justify-content-center">
+                                                                        <a href="#0" onclick="addCart('@item.ProductId','1')"><i class="fal fa-shopping-basket"></i></a>
+                                                                    </div>
+                                                                    <div class=" d-flex align-items-center justify-content-center">
+                                                                        <a href="#0" onclick="show(@item.ProductId)"><i class="fal fa-eye"></i></a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="ml-10 mt-10">Không tìm thấy sản phẩm!</span>
                                     }
                                 }
                             </div>
                         </div>
+                    </div>
+                    <div class="pagination-container mt-4">
+                        @if (Model.Count() > 0)
+                        {
+                            @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new
+                                {
+                                    page = page,
+                                    search = @Context.Request.Query["search"],
+                                    query = @Context.Request.Query["query"],
+                                    searchCategory = @Context.Request.Query["searchCategory"]
+                                }) + "#shop",
+                                     new X.PagedList.Web.Common.PagedListRenderOptions
+                            {
+                                LiElementClasses = new string[] { "page-item" },
+                                PageClasses = new string[] { "page-link" },
+                                MaximumPageNumbersToDisplay = 3 // Số lượng trang hiển thị tối đa
+                            })
+                        }
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-4">
@@ -253,80 +311,39 @@
                             </ul>
                         </div>
                         <div class="widget mt-30">
-                            <h2 class="title">top Product</h2>
+                            <h2 class="title">Sản phẩm mới</h2>
                             <div class="recent-posts top-products">
-                                <div class="item d-flex align-items-center">
-                                    <div class="thumb">
-                                        <img src="~/assets/images/products/t-p-1.png" alt="">
-                                    </div>
-                                    <div class="content">
-                                        <div class="rating d-flex align-items-center justify-content-center">
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                        </div>
-                                        <h5 class="rp-title border-effect"><a href="product-details.html">Coffe americano</a></h5>
-                                        <div class="pp__price">
-                                            <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item d-flex align-items-center">
-                                    <div class="thumb">
-                                        <img src="~/assets/images/products/t-p-2.png" alt="">
-                                    </div>
-                                    <div class="content">
-                                        <div class="rating d-flex align-items-center justify-content-center">
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                        </div>
-                                        <h5 class="rp-title border-effect"><a href="product-details.html">Coffe americano</a></h5>
-                                        <div class="pp__price">
-                                            <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item d-flex align-items-center">
-                                    <div class="thumb">
-                                        <img src="~/assets/images/products/t-p-3.png" alt="">
-                                    </div>
-                                    <div class="content">
-                                        <div class="rating d-flex align-items-center justify-content-center">
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                        </div>
-                                        <h5 class="rp-title border-effect"><a href="product-details.html">Coffe americano</a></h5>
-                                        <div class="pp__price">
-                                            <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item d-flex align-items-center">
-                                    <div class="thumb">
-                                        <img src="~/assets/images/products/t-p-4.png" alt="">
-                                    </div>
-                                    <div class="content">
-                                        <div class="rating d-flex align-items-center justify-content-center">
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                            <a href="#0"><i class="fal fa-star"></i></a>
-                                        </div>
-                                        <h5 class="rp-title border-effect"><a href="product-details.html">Coffe americano</a></h5>
-                                        <div class="pp__price">
-                                            <span class="price"> $325.00 / <span class="regular"><del>$348</del></span></span>
-                                        </div>
-                                    </div>
-                                </div>
+                                @{
+                                    @if (ViewBag.TopProducts != null && ViewBag.TopProducts is List<Product>)
+                                    {
+                                        foreach (var itemProduct in ViewBag.TopProducts)
+                                        {
+                                            <div class="item d-flex align-items-center">
+                                                <div class="thumb">
+                                                    <img style="width: 100%" src="@itemProduct.Image" alt="">
+                                                </div>
+                                                <div class="content">
+                                                    <div class="rating d-flex align-items-center justify-content-center">
+                                                        <a href="#0"><i class="fal fa-star"></i></a>
+                                                        <a href="#0"><i class="fal fa-star"></i></a>
+                                                        <a href="#0"><i class="fal fa-star"></i></a>
+                                                        <a href="#0"><i class="fal fa-star"></i></a>
+                                                        <a href="#0"><i class="fal fa-star"></i></a>
+                                                    </div>
+                                                    <h5 class="rp-title border-effect"><a href="product-details.html">@itemProduct.Name</a></h5>
+                                                    <div class="pp__price">
+                                                        <span class="price"> @itemProduct.Price đ / <span class="regular"><del>$348</del></span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p>No top products available</p>
+                                    }
+
+                                }
                             </div>
                         </div>
                     </div>
@@ -349,33 +366,60 @@
         // });
     </script>
     <script>
+
         function redirect() {
             var selectElement = document.getElementById('select');
             var selectedValue = selectElement.value;
+            var currentURL = new URL(window.location.href);
+            var searchParams = currentURL.searchParams;
 
-            switch (selectedValue) {
-                case 'sort':
-                    window.location.href = '/cua-hang#shop';
-                    break;
-                case 'asc':
-                    window.location.href = '/cua-hang?query=asc#shop';
-                    break;
-                case 'desc':
-                    window.location.href = '/cua-hang?query=desc#shop';
-                    break;
-                case 'name':
-                    window.location.href = '/cua-hang?query=name#shop';
-                    break;
-                default:
-                    break;
+            if (!searchParams) {
+                switch (selectedValue) {
+                    case 'sort':
+                        currentURL.searchParams.set('query', 'sort');
+                        break;
+                    case 'asc':
+                        currentURL.searchParams.set('query', 'asc');
+                        break;
+                    case 'desc':
+                        currentURL.searchParams.set('query', 'desc');
+                        break;
+                    case 'name':
+                        currentURL.searchParams.set('query', 'name');
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                switch (selectedValue) {
+                    case 'sort':
+                        currentURL.searchParams.set('query', 'sort');
+                        break;
+                    case 'asc':
+                        currentURL.searchParams.set('query', 'asc');
+                        break;
+                    case 'desc':
+                        currentURL.searchParams.set('query', 'desc');
+                        break;
+                    case 'name':
+                        currentURL.searchParams.set('query', 'name');
+                        break;
+                    default:
+                        break;
+                }
             }
+
+            // Chuyển hướng đến URL mới
+
+            window.location.href = currentURL.toString();
         }
+
 
         // Hàm này được gọi khi trang được load lại sau khi chuyển hướng
         window.onload = function () {
             var selectElement = document.getElementById('select');
             var urlParams = new URLSearchParams(window.location.search);
-            var sortParam = urlParams.get('sort');
+            var sortParam = urlParams.get('query');
 
             // Nếu có tham số sort trong URL, chọn option tương ứng
             if (sortParam) {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coffee.WebUI.Areas.Admin.Controllers
@@ -10,6 +11,11 @@ namespace Coffee.WebUI.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Login");
         }
     }
 }

@@ -12,15 +12,18 @@ using static System.Net.WebRequestMethods;
 using Microsoft.AspNetCore.Http;
 using Coffee.DATA.Models;
 using System.Net.Http;
+using Coffee.DATA.Repository;
 
 namespace Coffee.WebUI.Controllers
 {
     public class LoginController : Controller
     {
         private readonly DbCoffeeDbContext _dbCoffeeDbContext;
-        public LoginController(DbCoffeeDbContext dbCoffeeDbContext)
+        private readonly IRepository<User> _userRepository;
+        public LoginController(DbCoffeeDbContext dbCoffeeDbContext, IRepository<User> userRepository)
         {
             _dbCoffeeDbContext = dbCoffeeDbContext;
+            _userRepository = userRepository;
         }
         //[Route("/login")]
         public IActionResult Index()
@@ -87,7 +90,7 @@ namespace Coffee.WebUI.Controllers
                 var checkEmail = _dbCoffeeDbContext.Users.Where(x => x.Email == emailClaim);
                 if (checkEmail.Count() < 1)
                 {
-                    var newUser = new User { Email = emailClaim, RoleId = 2 , Status = true, CreatedOn = DateTime.Now};
+                    var newUser = new User { Email = emailClaim, RoleId = 2, Status = true, CreatedOn = DateTime.Now };
                     _dbCoffeeDbContext.Users.Add(newUser);
                     _dbCoffeeDbContext.SaveChanges();
                 }
@@ -101,42 +104,51 @@ namespace Coffee.WebUI.Controllers
 
         [HttpPost]
         [Route("/send-otp")]
-        public IActionResult SendOTPEmail(string email)
+        public async Task<IActionResult> SendOTPEmail(string email)
         {
-            // Mật khẩu ứng dụng OtpEmail : kemz hkfu jode ctfp
-            Random random = new Random();
-            var randomNumber = random.Next(100000, 1000000);
-            MailMessage message = new MailMessage("txvq0101@gmail.com", email, "Otp", Convert.ToString(randomNumber));
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-            client.EnableSsl = true;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential("txvq0101@gmail.com", "kemz hkfu jode ctfp");
-            client.Send(message);
-            HttpContext.Session.SetString("OTP", Convert.ToString(randomNumber));
-            //HttpContext.Session.SetString("OTP", "1");
-            return Ok();
-        }
-        [HttpPost]
-        public IActionResult RegisterCreate(string email, string password, string otp)
-        {
-            var otpss = HttpContext.Session.GetString("OTP");
-            var checkEmail = _dbCoffeeDbContext.Users.Where(x => x.Email == email);
-            if (checkEmail.Count() > 0)
-            {
-                return BadRequest();
-            }
-            if (otpss == otp && checkEmail.Count() < 1)
-            {
-                var newUser = new User { Email = email, Password = md5.ComputeMD5Hash(password), RoleId = 2 };
+            var checkEmail = await _userRepository.GetAllAsync();
 
-                _dbCoffeeDbContext.Users.Add(newUser);
-                _dbCoffeeDbContext.SaveChanges();
-                return Ok();
+            if (checkEmail.Where(x => x.Email == email).Count() > 0)
+            {
+                return Json(new { success = false, message = "Email đã tồn tại!" });
             }
             else
             {
-                return BadRequest();
+                // Mật khẩu ứng dụng OtpEmail : kemz hkfu jode ctfp
+                Random random = new Random();
+                var randomNumber = random.Next(100000, 1000000);
+                MailMessage message = new MailMessage("txvq0101@gmail.com", email, "Otp", Convert.ToString(randomNumber));
+                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+                client.EnableSsl = true;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new System.Net.NetworkCredential("txvq0101@gmail.com", "kemz hkfu jode ctfp");
+                client.Send(message);
+                HttpContext.Session.SetString("OTP", Convert.ToString(randomNumber));
+                //HttpContext.Session.SetString("OTP", "1");
+                return Json(new { success = true, message = "Vui lòng xem email để lấy mã OTP!" });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Register(string email, string password, string otp)
+        {
+            var otpss = HttpContext.Session.GetString("OTP");
+            if (otpss == otp)
+            {
+                var _user = new User { Email = email, Password = md5.ComputeMD5Hash(password), Status = true, CreatedOn = DateTime.Now, RoleId = 2 };
+                try
+                {
+                    await _userRepository.InsertAsync(_user);
+                    return Json(new { success = true, message = "Đăng kí thành công!" });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = "Fail: " + ex });
+                }
+            }
+            else
+            {
+                return Json(new { success = false, message = "Mã OTP không khớp" });
             }
         }
     }

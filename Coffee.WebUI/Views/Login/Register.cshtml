@@ -4,6 +4,12 @@
 @section Styles {
     <link rel="stylesheet" href="~/assets/css/css_Login.css" />
 }
+<center>
+    <div class="alert alert-success" role="alert" style="width: max-content; max-width: 500px">
+    </div>
+    <div class="alert alert-danger" role="alert" style="width: max-content; max-width: 500px">
+    </div>
+</center>
 <form asp-controller="Login" asp-action="Register" method="post">
     <div class="m-auto">
         <div class="login-form">
@@ -22,7 +28,7 @@
             <div id="pass">
                 <div class="mb-3">
                     <label class="form-label">Mã otp</label>
-                    <input class="form-control" name="otp"/>
+                    <input class="form-control" name="otp" />
                     @if (ViewBag.Otp != null)
                     {
                         <div class="alert alert-danger">@ViewBag.Otp</div>
@@ -46,23 +52,44 @@
 </form>
 @section Scripts {
     <script src="~/assets/js/js_login.js"></script>
-    <script src="~/assets/js/check.js"></script>
+    <script>
+        function showAlert(type, message) {
+            // Hiển thị alert tương ứng với loại và thông báo được chọn
+            var alertToShow = document.querySelector('.alert.alert-' + type);
+            if (alertToShow) {
+                alertToShow.innerText = message;
+                alertToShow.style.display = 'block';
+                // Ẩn alert sau 5 giây
+                setTimeout(function () {
+                    alertToShow.style.display = 'none';
+                }, 5000);
+            }
+        }
+    </script>
     <script>
         $(document).ready(function () {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function (alert) {
+                alert.style.display = 'none';
+            });
             $("#pass").hide();
             $("#next").click(function () {
                 var email = $("input[name='email']").val();
-
+                $("#next").hide();
                 if (isValidEmail(email)) {
-                    $("#pass").show();
-                    $("#next").hide();
                     $.ajax({
                         type: "POST",
                         url: "/send-otp",
                         data: { email: email },
                         success: function (response) {
-                            // Xử lý phản hồi từ máy chủ (nếu cần)
-                            console.log("Email sent successfully!");
+                            if (response.success) {
+                                $("#pass").show();
+                                $("#next").hide();
+                                showAlert('success', response.message);
+                            } else {
+                                showAlert('danger', response.message);
+                                $("#next").show();
+                            }
                         },
                         error: function (xhr, status, error) {
                             // Xử lý lỗi (nếu có)
@@ -71,7 +98,7 @@
                     });
                 }
                 else {
-                    alert("Vui lòng nhập email!");
+                    showAlert('danger', "Vui lòng nhập email!");
                 }
             });
         });
@@ -82,25 +109,27 @@
             var otp = $("input[name='otp']").val();
             if (pass === cfpass) {
                 $.ajax({
-                    url: "/Login/RegisterCreate",
+                    url: "/Login/Register",
                     method: "POST",
                     data: { email: email, password: pass, otp: otp },
-                    success: function () {
-                        // Xử lý khi đăng ký thành công
-                        alert("Đăng ký thành công!");
-                        
+                    success: function (response) {
+                        if (response.success) {
+                            showAlert('success', response.message);
+                            setTimeout(function () {
+                                window.location.href = '/login'
+                            }, 5000);
+                        } else {
+                            showAlert('danger', response.message);
+                        }
                     },
                     error: function (xhr, status, error) {
-                        // Xử lý khi đăng ký không thành công
-                        alert("Đăng ký thất bại:");
-                        // Hiển thị thông báo lỗi hoặc thực hiện xử lý khác
+                        showAlert('danger', response.message);
                     }
                 });
             } else {
-                alert("Mật khẩu không khớp!");
+                showAlert('danger', "Mật khẩu không khớp!");
             }
 
         });
-        
     </script>
 }
