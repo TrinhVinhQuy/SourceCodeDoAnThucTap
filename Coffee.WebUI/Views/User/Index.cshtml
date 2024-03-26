@@ -2,13 +2,19 @@
     ViewData["Title"] = "Index";
 }
 @model Coffee.DATA.Models.User;
+<center>
+    <div class="alert alert-success" role="alert" style="width: max-content; max-width: 500px">
+    </div>
+    <div class="alert alert-danger" role="alert" style="width: max-content; max-width: 500px">
+    </div>
+</center>
 <div class="container card card-body mb-5">
     <h1 class="text-center">Thông tin</h1>
     <div class="row">
         <div class="col-xs-12 col-sm-6 ">
             <label class="form-label">Họ và tên</label>
             <input class="form-control" asp-for="Name" placeholder="Nhập họ và tên" />
-            <input type="type" name="Id" value="@Model.Id" />
+            <input type="type" name="Id" class="d-none" value="@Model.Id" />
         </div>
         <div class="col-xs-12 col-sm-6">
             <label class="form-label">Số điện thoại</label>
@@ -51,8 +57,23 @@
 @section Scripts {
     <script src="~/assets/js/data.json"></script>
     <script>
-
+        function showAlert(type, message) {
+            // Hiển thị alert tương ứng với loại và thông báo được chọn
+            var alertToShow = document.querySelector('.alert.alert-' + type);
+            if (alertToShow) {
+                alertToShow.innerText = message;
+                alertToShow.style.display = 'block';
+                // Ẩn alert sau 5 giây
+                setTimeout(function () {
+                    alertToShow.style.display = 'none';
+                }, 5000);
+            }
+        }
         $(document).ready(function () {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function (alert) {
+                alert.style.display = 'none';
+            });
             // Lấy các phần tử input
             var provinceInput = document.querySelector('input[name="province"]');
             var districtInput = document.querySelector('input[name="district"]');
@@ -145,21 +166,23 @@
                         type: 'POST',
                         url: '/User/Index', // Thay đổi đường dẫn đến action của controller của bạn
                         data: {
-                            id: id,
-                            name: name,
-                            phone: phone,
-                            province: province,
-                            district: district,
-                            town: town,
-                            address: address,
+                            Id: id,
+                            Name: name,
+                            Phone: phone,
+                            Province: province,
+                            District: district,
+                            Town: town,
+                            Address: address,
                         },
-                        contentType: 'application/json',
                         success: function (response) {
-                            // Xử lý phản hồi từ máy chủ nếu cần
-                            console.log(response);
+                            if (response.success) {
+                                showAlert('success', response.message);
+                            } else {
+                                showAlert('danger', response.message);
+                            }
                         },
                         error: function (xhr, status, error) {
-                            // Xử lý lỗi nếu có
+                            // showAlert('danger', error);
                             console.error(error);
                         }
                     });

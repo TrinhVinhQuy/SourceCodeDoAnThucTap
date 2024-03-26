@@ -24,9 +24,31 @@ namespace Coffee.WebUI.Controllers
             return View(_userDetail);
         }
         [HttpPost]
-        public async Task<IActionResult> Index(User model)
+        public async Task<IActionResult> Index(User user)
         {
-            return Json(model);
+            try
+            {
+                var _user = await _userRepository.GetByIdAsync(user.Id);
+                if (_user != null)
+                {
+                    _user.Name = user.Name;
+                    _user.Town = user.Town;
+                    _user.Address = user.Address;
+                    _user.Province = user.Province;
+                    _user.District = user.District;
+                    _user.Phone = user.Phone;
+                    await _userRepository.UpdateAsync(_user);
+                    return Json(new { success = true, message = "Cập nhật thành công!" });
+                }
+                else
+                {
+                    return StatusCode(404);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Fail: " + ex });
+            }
         }
     }
 }
