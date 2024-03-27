@@ -43,7 +43,7 @@ namespace Coffee.WebUI.Controllers
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Email, user.Email),
-                        //new Claim(ClaimTypes.Name, user.Name),
+                        new Claim(ClaimTypes.Name, user.Name),
                         new Claim(ClaimTypes.Role, role.Name)
                     };
 
@@ -130,12 +130,12 @@ namespace Coffee.WebUI.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Register(string email, string password, string otp)
+        public async Task<IActionResult> Register(string email, string password, string otp, string name)
         {
             var otpss = HttpContext.Session.GetString("OTP");
             if (otpss == otp)
             {
-                var _user = new User { Email = email, Password = md5.ComputeMD5Hash(password), Status = true, CreatedOn = DateTime.Now, RoleId = 2 };
+                var _user = new User { Email = email, Password = md5.ComputeMD5Hash(password), Status = true, CreatedOn = DateTime.Now, RoleId = 2, Name = name };
                 try
                 {
                     await _userRepository.InsertAsync(_user);

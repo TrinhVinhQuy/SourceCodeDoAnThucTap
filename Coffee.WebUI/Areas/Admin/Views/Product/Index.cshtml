@@ -25,7 +25,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table id="dataTable" class="display" width="100%" cellspacing="0">
+            <table id="dataTable" class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Tên </th>
@@ -125,25 +125,24 @@
                 {
                     "data": null,
                     "render": function (data, type, row) {
-                        return '<a href="/Admin/ProductDetail?id=' + data.id + '" target="_blank" class="btn btn-primary">Sửa</a>';
+                        return '<a href="/Admin/ProductDetail?id=' + data.id + '" target="_blank" class="m-0 font-weight-bold text-primary">Sửa</a>';
                     }
                 },
                 {
                     "data": null,
                     "render": function (data, type, row) {
-                        return '<button class="btn btn-danger delete-product" data-id="' + data.id + '">Xóa</button>';
+                        return '<a href="javascript:void(0)" class="delete-product m-0 font-weight-bold text-primary" data-id="' + data.id + '">Xóa</a>';
                     }
                 }
             ],
-            "lengthMenu": [5, 10, 25, 50, { label: 'Tất cả', value: -1 }],
+            "lengthMenu": [5, 10, 25, 50],
             "language": {
                 processing: "Message khi đang tải dữ liệu",
                 search: "Tìm kiếm",
-                lengthMenu: "Điều chỉnh số lượng bản ghi trên 1 trang _MENU_ ",
-                info: "Bản ghi từ _START_ đến _END_ Trong tổng cộng _TOTAL_ bản ghi",
+                lengthMenu: "Điều chỉnh số mục trên 1 trang _MENU_ ",
+                info: "Hiển thị _START_ đến _END_ trong  _TOTAL_ mục",
                 infoEmpty: "Không có dữ liệu, Hiển thị 0 bản ghi trong _MAX_ tổng cộng 0 ",
                 infoFiltered: "(Không có sản phẩm trong _MAX_ bản ghi)",
-                // infoPostFix: "Alo Alo", // Cái này khi thêm vào nó sẽ đứng sau info
                 loadingRecords: "",
                 zeroRecords: "Không có dữ liệu theo tìm kiếm",
                 emptyTable: "Không có dữ liệu",

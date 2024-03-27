@@ -16,11 +16,7 @@
             <h2 class="text-center mb-4">Đăng kí</h2>
             <div class="mb-3">
                 <label class="form-label">Email</label>
-                <input class="form-control" name="email" />
-                @if (ViewBag.Email != null)
-                {
-                    <div class="alert alert-danger">@ViewBag.Email</div>
-                }
+                <input class="form-control" name="email" placeholder="Nhập email" />
             </div>
             <center id="next">
                 <a href="javascript:void(0)" class="site-btn">Tiếp tục</a>
@@ -29,10 +25,10 @@
                 <div class="mb-3">
                     <label class="form-label">Mã otp</label>
                     <input class="form-control" name="otp" />
-                    @if (ViewBag.Otp != null)
-                    {
-                        <div class="alert alert-danger">@ViewBag.Otp</div>
-                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="password" name="name" ty class="form-control" placeholder="Nhập họ và tên"/>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mật khẩu</label>
@@ -107,11 +103,16 @@
             var pass = $("input[name='pass']").val();
             var cfpass = $("input[name='cfpass']").val();
             var otp = $("input[name='otp']").val();
+            var name = $("input[name='name']").val();
+            if (name === '' || email === '' || pass === '' || cfpass === '' || otp === '') {
+                alert("Vui lòng điền đầy đủ thông tin");
+                return;
+            }
             if (pass === cfpass) {
                 $.ajax({
                     url: "/Login/Register",
                     method: "POST",
-                    data: { email: email, password: pass, otp: otp },
+                    data: { email: email, password: pass, otp: otp, name : name },
                     success: function (response) {
                         if (response.success) {
                             showAlert('success', response.message);

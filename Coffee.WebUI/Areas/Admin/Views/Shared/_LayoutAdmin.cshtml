@@ -65,7 +65,7 @@
                         <a class="collapse-item" href="cards.html">Quản lý FAQ</a>
                         <a class="collapse-item" href="cards.html">Quản lý câu chuyện</a>
                         <h6 class="collapse-header">Quản lý bài viết:</h6>
-                        <a class="collapse-item" href="cards.html">Quản lý bài viết</a>
+                        <a class="collapse-item" asp-area="Admin" asp-controller="News" asp-action="Index">Quản lý bài viết</a>
                     </div>
                 </div>
             </li>
@@ -299,7 +299,8 @@
     <!-- Custom scripts for all pages-->
     <script src="~/admin/js/sb-admin-2.min.js"></script>
     <!-- Bao gồm JavaScript của DataTables -->
-    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+    <script src="~/admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
